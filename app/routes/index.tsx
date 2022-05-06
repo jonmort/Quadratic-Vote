@@ -1,32 +1,17 @@
-export default function Index() {
+import { Form, Link } from "@remix-run/react";
+import React from "react";
+
+const Home = () => {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div>
+      <h1>Welcome</h1>
+      <Link to='/create' className="my-4 border-black border-2 p-2 inline-block">Create a new quiz</Link>
+      <Form action="/join" method='get'>
+        <label htmlFor="quizId">Join a Quiz:</label>
+        <input className="border-2 border-black p-2 ml-2" type="text" name="quizId" placeholder="Quiz ID" />
+      </Form>
     </div>
   );
-}
+};
+
+export default Home;
