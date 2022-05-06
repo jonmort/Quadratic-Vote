@@ -11,34 +11,36 @@ datasource db {
 }
 
 model Poll {
-  id             Int      @id @default(autoincrement())
+  id             String   @id @default(cuid())
   title          String
-  joinId         Int      @unique
   createdAt      DateTime @default(now())
   options        Option[]
   initialCredits Int
+  voters          Voter[]
 }
 
 model Option {
   id        Int      @id @default(autoincrement())
   text      String
-  poll      Poll     @relation(fields: [pollId], references: [id])
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  pollId    Int
-  Vote      Vote[]
+  pollId    String
+  vote      Vote[]
 }
 
 model Vote {
   id       Int    @id @default(autoincrement())
   option   Option @relation(fields: [optionId], references: [id])
   optionId Int
-  voter    Voter? @relation(fields: [voterId], references: [id])
-  voterId  Int?
+  voter    Voter? @relation(fields: [voterId], references: [id], onDelete: Cascade)
+  voterId  String?
 }
 
 model Voter {
-  id      Int    @id @default(autoincrement())
+  id      String    @id @default(cuid())
   name    String
   votes   Vote[]
+  poll    Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
   credits Int
+  pollId  String
 }
