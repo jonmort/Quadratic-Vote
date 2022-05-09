@@ -64,14 +64,14 @@ const Voting = () => {
                 <fetcher.Form action="/vote/increment" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
                   <input hidden name="voterId" value={id} readOnly />
-                  <button type="submit" className="btn">
+                  <button disabled={fetcher.state === 'submitting'} type="submit" className="btn">
                     Add Votes
                   </button>
                 </fetcher.Form>
                 <fetcher.Form action="/vote/decrement" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
                   <input hidden name="voterId" value={id} readOnly />
-                  <button type="submit" className="btn">
+                  <button disabled={fetcher.state === 'submitting'} type="submit" className="btn">
                     Reduce Votes
                   </button>
                 </fetcher.Form>
