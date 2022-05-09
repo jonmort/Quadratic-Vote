@@ -32,12 +32,13 @@ export const loader: LoaderFunction = async ({ params }) => {
 const Voting = () => {
   const {
     options,
-    voter: { votes, credits, id, poll },
+    voter: { votes, credits, id, poll, name },
   } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();  
 
   return (
     <div className="container mx-auto text-center">
+      <h2 className="text-3xl my-6">Hi <span className="text-teal-500">{name}</span></h2>
       <h2 className="text-3xl my-6">
         Voting for{" "}
         <Link target="_blank" className="text-teal-500 underline" to={`/poll/${poll.id}`}>

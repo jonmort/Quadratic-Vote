@@ -1,6 +1,6 @@
 import type { Option, Poll, Vote, Voter } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { db } from "~/utils/prisma.server";
 
@@ -69,7 +69,7 @@ const PollDetails = () => {
         <ul className="mt-2">
           {voters.map((v) => (
             <li key={v.id}>
-              {v.name} - <span className="text-teal-700">Credits remaining: {v.credits}</span>
+              <Link className="underline" to={`/vote/${v.id}`}>{v.name}</Link> - <span className="text-teal-700">Credits remaining: {v.credits}</span>
             </li>
           ))}
         </ul>
