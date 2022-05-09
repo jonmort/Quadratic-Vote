@@ -5,9 +5,8 @@ import React from "react";
 import { db } from "~/utils/prisma.server";
 
 type LoaderData = {
-  poll: Poll & {
-    options: Option[];
-  };
+  poll: Poll;
+  options: Option[];
   voters: (Voter & {
     votes: Vote[];
   })[];
@@ -20,7 +19,6 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params }) => {
   const poll = await db.poll.findFirst({
     where: { id: params.pollId },
-    include: { options: true },
   });
 
   if (!poll) {
@@ -32,7 +30,12 @@ export const loader: LoaderFunction = async ({ params }) => {
     include: { votes: true },
   });
 
-  const questions = poll.options.map((option) => ({
+  const options = await db.option.findMany({
+    where: { pollId: params.pollId },
+    orderBy: { vote: { _count: "desc" } },
+  });
+
+  const questions = options.sort().map((option) => ({
     question: option.text,
     votes: voters.reduce((prev, current) => {
       const votesFor = current.votes.filter(
@@ -49,24 +52,24 @@ const PollDetails = () => {
   const { poll, questions, voters } = useLoaderData<LoaderData>();
 
   return (
-    <div>
-      <h1>{poll.title}</h1>
+    <div className="mx-auto container text-center">
+      <h1 className="my-8 text-3xl text-teal-500">{poll.title}</h1>
       <div className="my-4">
-        <h2>Questions</h2>
-        <ul>
+        <h2 className="text-xl">Current Votes</h2>
+        <ul className="mt-2">
           {questions.map((q) => (
             <li key={q.question}>
-              {q.question} - Votes: {q.votes}
+              {q.question} - <span className="text-teal-700">Votes: {q.votes}</span>
             </li>
           ))}
         </ul>
       </div>
       <div className="my-4">
-        <h2>Voters</h2>
-        <ul>
+        <h2 className="text-xl">Voters</h2>
+        <ul className="mt-2">
           {voters.map((v) => (
             <li key={v.id}>
-              {v.name} - {v.votes.length > 0 ? "Voted" : "Not Voted"}
+              {v.name} - <span className="text-teal-700">Credits remaining: {v.credits}</span>
             </li>
           ))}
         </ul>

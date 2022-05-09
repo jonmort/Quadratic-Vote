@@ -3,13 +3,24 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div>
-      <h1>Welcome</h1>
-      <Link to='/create' className="my-4 border-black border-2 p-2 inline-block">Create a new poll</Link>
-      <Form action="/join" method='get'>
-        <label htmlFor="pollId">Join a poll:</label>
-        <input className="border-2 border-black p-2 ml-2" type="text" name="pollId" placeholder="Poll ID" />
-      </Form>
+    <div className="container mx-auto text-center">
+      <div className="mt-[20vh]">
+        <h1 className="text-4xl">Welcome to Quadratic Voting</h1>
+        <div className="mb-8 mt-16">
+          <Link className="btn" to="/create">
+            Create a new poll
+          </Link>
+        </div>
+        <p className="text-3xl my-6">OR</p>
+        <Form action="/join" method="get">
+          <div className="flex flex-col items-center">
+            <input className="input mb-4" type="text" name="pollId" placeholder="Poll ID" />
+            <button type="submit" className="btn">
+              Join A poll
+            </button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };

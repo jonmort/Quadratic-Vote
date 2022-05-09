@@ -2,15 +2,14 @@ import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { db } from "~/utils/prisma.server";
 
 type ActionData = {
   fieldErrors?: {
-    field: string;
-    message: string;
-  }[];
+    [k: string]: string;
+  };
   error?: string;
 };
 
@@ -50,12 +49,11 @@ export const action: ActionFunction = async ({ request }) => {
     return redirect(`/poll/${newPoll.id}`);
   } catch (err: any) {
     if (err instanceof Yup.ValidationError) {
-      return json({
-        fieldErrors: err.inner.map((inner) => ({
-          field: inner.path || inner.name,
-          message: inner.message,
-        })),
+      let fieldErrors: { [k: string]: string } = {};
+      err.inner.forEach((inner) => {
+        fieldErrors[inner.path || inner.name] = inner.message;
       });
+      return json({ fieldErrors });
     } else {
       return json({ error: "Unknown Error." });
     }
@@ -64,33 +62,65 @@ export const action: ActionFunction = async ({ request }) => {
 
 const CreatePoll = () => {
   const actionData = useActionData<ActionData>();
+  const [questionCount, setQuestionCount] = useState(4);
 
-  console.log({ actionData });
+  const addQuestion = () => setQuestionCount((r) => r + 1);
+
+  const removeQuestion = () => setQuestionCount((r) => r - 1);
 
   return (
-    <Form className="p-4" method="post" action="/create">
-      <div>
-        <label htmlFor="title">Title:</label>
-        <input className="ml-2 border-2 px-2" type="text" name="title" />
+    <Form
+      className="container mx-auto text-center flex flex-col items-center space-y-4"
+      method="post"
+      action="/create"
+    >
+      <h1 className="text-4xl my-16">Create a New Poll</h1>
+      <div className="bg-red-200 w-full p-4" hidden={!actionData?.error}>
+        <h2 className="text-lg">{actionData?.error}</h2>
       </div>
-      <div className="my-2">
-        <label htmlFor="initialCredits">Initial Credits:</label>
-        <input
-          className="ml-2 border-2 px-2"
-          type="number"
-          name="initialCredits"
-          required
-        />
+      <div className="input-group">
+        <label htmlFor="title" className="input-label">
+          Title
+        </label>
+        <input className="input" type="text" name="title" />
+        <p className="error-text" hidden={!actionData?.fieldErrors?.title}>
+          {actionData?.fieldErrors?.title}
+        </p>
       </div>
-      <div>
-        <label htmlFor="questions">Question1:</label>
-        <input className="ml-2 border-2 px-2" name="questions" />
+      <div className="input-group">
+        <label className="input-label" htmlFor="initialCredits">
+          Initial Credits:
+        </label>
+        <input className="input" type="number" name="initialCredits" required />
+        <p
+          className="error-text"
+          hidden={!actionData?.fieldErrors?.initialCredits}
+        >
+          {actionData?.fieldErrors?.initialCredits}
+        </p>
       </div>
-      <div>
-        <label htmlFor="questions">Question2:</label>
-        <input className="ml-2 border-2 px-2" name="questions" />
+      {[...Array(questionCount)].map((_, i) => (
+        <div key={i} className="input-group">
+          <label className="input-label" htmlFor="questions">
+            Question {i + 1}:
+          </label>
+          <input className="input" name="questions" />
+          <p
+            className="error-text"
+            hidden={!actionData?.fieldErrors?.questions}
+          >
+            {actionData?.fieldErrors?.questions}
+          </p>
+        </div>
+      ))}
+      <div className="flex space-x-2 justify-start">
+        <button className="btn" onClick={addQuestion}>Add Question</button>
+        <button className="btn" onClick={removeQuestion} hidden={questionCount < 2}>
+          Remove Question
+        </button>
       </div>
-      <button className="bg-gray-200 p-2 my-2" type="submit">
+
+      <button className="btn" type="submit">
         Submit
       </button>
     </Form>

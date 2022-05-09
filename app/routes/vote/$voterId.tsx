@@ -7,7 +7,7 @@ import { db } from "~/utils/prisma.server";
 type LoaderData = {
   voter: Voter & {
     votes: Vote[];
-    poll: Poll
+    poll: Poll;
   };
   options: Option[];
 };
@@ -34,14 +34,20 @@ const Voting = () => {
     options,
     voter: { votes, credits, id, poll },
   } = useLoaderData<LoaderData>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher();  
 
   return (
-    <div>
-      <h1>Please vote</h1>
-      <h2>Voting for <Link className="text-blue-500" to={`/poll/${poll.id}`}>{poll.title}</Link></h2>
-      <p>Remaining credits: {credits}</p>
-      <ul>
+    <div className="container mx-auto text-center">
+      <h2 className="text-3xl my-6">
+        Voting for{" "}
+        <Link className="text-teal-500" to={`/poll/${poll.id}`}>
+          {poll.title}
+        </Link>
+      </h2>
+      <p className="text-2xl">
+        Remaining credits: <span className="text-teal-500">{credits}</span>
+      </p>
+      <ul className="mt-8">
         {options.map((option) => {
           const myVotes = votes.reduce(
             (acc, val) => (val.optionId === option.id ? acc + 1 : acc),
@@ -50,30 +56,26 @@ const Voting = () => {
           const optionId = option.id;
 
           return (
-            <li className="my-4" key={option.id}>
-              <p>
+            <li className="my-8 flex flex-col items-center" key={option.id}>
+              <p className="text-xl">
                 {option.text} - My votes: {myVotes}
               </p>
-              <fetcher.Form action="/vote/increment" method="post">
-                <input hidden name="optionId" value={optionId} readOnly />
-                <input hidden name="voterId" value={id} readOnly />
-                <button
-                  type="submit"
-                  className="border-2 border-black mx-2 px-2"
-                >
-                  Add Votes
-                </button>
-              </fetcher.Form>
-              <fetcher.Form action="/vote/decrement" method="post">
-                <input hidden name="optionId" value={optionId} readOnly />
-                <input hidden name="voterId" value={id} readOnly />
-                <button
-                  type="submit"
-                  className="border-2 border-black mx-2 px-2"
-                >
-                  Reduce Votes
-                </button>
-              </fetcher.Form>
+              <div className="flex space-x-4 items-center mt-2">
+                <fetcher.Form action="/vote/increment" method="post">
+                  <input hidden name="optionId" value={optionId} readOnly />
+                  <input hidden name="voterId" value={id} readOnly />
+                  <button type="submit" className="btn">
+                    Add Votes
+                  </button>
+                </fetcher.Form>
+                <fetcher.Form action="/vote/decrement" method="post">
+                  <input hidden name="optionId" value={optionId} readOnly />
+                  <input hidden name="voterId" value={id} readOnly />
+                  <button type="submit" className="btn">
+                    Reduce Votes
+                  </button>
+                </fetcher.Form>
+              </div>
             </li>
           );
         })}
