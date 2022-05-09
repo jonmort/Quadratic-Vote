@@ -1,5 +1,5 @@
 import type { Option, Poll, Vote, Voter } from "@prisma/client";
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { db } from "~/utils/prisma.server";
@@ -11,6 +11,10 @@ type LoaderData = {
   };
   options: Option[];
 };
+
+export const meta: MetaFunction = ({data}) => ({
+  title: `Voting for ${data.voter.poll.title}`
+})
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { voterId } = params;
