@@ -40,7 +40,7 @@ const Voting = () => {
     <div className="container mx-auto text-center">
       <h2 className="text-3xl my-6">
         Voting for{" "}
-        <Link className="text-teal-500" to={`/poll/${poll.id}`}>
+        <Link target="_blank" className="text-teal-500 underline" to={`/poll/${poll.id}`}>
           {poll.title}
         </Link>
       </h2>

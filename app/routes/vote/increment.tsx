@@ -31,8 +31,6 @@ export const action: ActionFunction = async ({ request }) => {
   ).length;
   const requiredCredits = existingVotes > 0 ? (existingVotes + 1) ** 2 : 1;
 
-  console.log({ requiredCredits });
-
   if (voter.credits < requiredCredits)
     return new Response("Not enough credits", { status: 400 });
 
