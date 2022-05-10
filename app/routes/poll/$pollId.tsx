@@ -17,7 +17,7 @@ type LoaderData = {
 };
 
 export const meta: MetaFunction = ({data}) => ({
-  title: `Poll: ${data.poll.title}`
+  title: `Poll: ${data?.poll?.title}`
 })
 
 export const loader: LoaderFunction = async ({ params }) => {

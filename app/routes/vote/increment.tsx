@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const voter = await db.voter.findFirst({
     where: { id: voterId },
-    select: { votes: true, credits: true },
+    select: { credits: true },
   });
 
   if (!voter) return new Response("Voter not found.", { status: 404 });
@@ -26,21 +26,22 @@ export const action: ActionFunction = async ({ request }) => {
   if (voter.credits < 1)
     return new Response("Not enough credits", { status: 400 });
 
-  const existingVotes = voter.votes.filter(
-    (vote) => vote.optionId === optionId
-  ).length;
-  const requiredCredits = existingVotes > 0 ? (existingVotes + 1) ** 2 : 1;
+  const existingVotesLength = await db.vote.count({
+    where: { voterId, optionId }
+  });
+  const requiredCredits = existingVotesLength > 0 ? (existingVotesLength + 1) ** 2 : 1;
 
   if (voter.credits < requiredCredits)
     return new Response("Not enough credits", { status: 400 });
 
   await db.$transaction([
-    db.vote.create({ data: { voterId, optionId } }),
+    db.vote.create({ data: { voterId, optionId }, select: null }),
     db.voter.update({
       where: { id: voterId },
       data: { credits: voter.credits - requiredCredits },
+      select: null
     }),
   ]);
 
-  return true;
+  return null;
 };

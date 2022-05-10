@@ -52,6 +52,9 @@ const Voting = () => {
       <p className="text-2xl">
         Remaining credits: <span className="text-teal-500">{credits}</span>
       </p>
+      <div className="bg-red-200 w-full p-4 mt-4" hidden={!fetcher?.data}>
+        <h2 className="text-lg">{fetcher?.data}</h2>
+      </div>
       <ul className="mt-8">
         {options.map((option) => {
           const myVotes = votes.reduce(

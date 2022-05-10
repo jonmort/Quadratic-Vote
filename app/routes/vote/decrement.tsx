@@ -18,14 +18,15 @@ export const action: ActionFunction = async ({ request }) => {
 
   const voter = await db.voter.findFirst({
     where: { id: voterId },
-    select: { votes: true, credits: true },
+    select: { credits: true },
   });
 
   if (!voter) return new Response("Voter not found.", { status: 404 });
 
-  const existingVotes = voter.votes.filter(
-    (vote) => vote.optionId === optionId
-  );
+  const existingVotes = await db.vote.findMany({
+    where: { voterId, optionId },
+    select: { id: true },
+  });
 
   if (existingVotes.length === 0) return true;
 
@@ -34,12 +35,14 @@ export const action: ActionFunction = async ({ request }) => {
   await db.$transaction([
     db.vote.delete({
       where: { id: existingVotes[existingVotes.length - 1].id },
+      select: null
     }),
     db.voter.update({
       where: { id: voterId },
       data: { credits: voter.credits + creditsToRedeem },
+      select: null
     }),
   ]);
 
-  return true;
+  return null;
 };
