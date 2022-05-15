@@ -7,10 +7,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import styles from "./styles/app.css"
+import Navbar from "./components/Navbar";
+import styles from "./styles/app.css";
 
 export function links() {
-  return [{ rel: "stylesheet", href: styles }]
+  return [{ rel: "stylesheet", href: styles }];
 }
 
 export const meta: MetaFunction = () => ({
@@ -21,12 +22,13 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   return (
-    <html lang="en">
+    <html data-theme="corporate" lang="en">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="bg-slate-100">
+      <body>
+        <Navbar />
         <Outlet />
         <ScrollRestoration />
         <Scripts />

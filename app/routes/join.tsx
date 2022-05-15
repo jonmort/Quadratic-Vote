@@ -52,43 +52,55 @@ const Join = () => {
   const loaderData = useLoaderData<LoaderData>();
 
   return (
-    <div className="container mx-auto text-center">
-      {loaderData ? (
-        <h1 className="text-3xl my-6">
-          Joining <span className="text-teal-500">{loaderData.poll.title}</span>
-        </h1>
-      ) : null}
-      <Form
-        className="flex flex-col items-center mt-8 space-y-4"
-        action="/join"
-        method="post"
-      >
-        <div className="input-group">
-          <label className="input-label" htmlFor="name">
-            Your Name
-          </label>
-          <input className="input" type="text" name="name" placeholder="Name" />
-        </div>
-
-        <div className="input-group" hidden={!!loaderData}>
-          {!loaderData && (
-            <label className="input-label" htmlFor="pollId">
-              Poll ID
-            </label>
+    <div className="container mx-auto">
+      <div className="prose w-full">
+        <h1 className="my-6">
+          {loaderData ? (
+            <span>
+              Joining Poll{" "}
+              <span className="text-teal-500">{loaderData.poll.title}</span>
+            </span>
+          ) : (
+            <span>Enter your name and the Poll ID</span>
           )}
-          <input
-            hidden={!!loaderData}
-            className="input"
-            name="pollId"
-            defaultValue={loaderData?.poll?.id}
-            placeholder="Poll ID"
-          />
-        </div>
+        </h1>
+        <Form
+          className="flex flex-col mt-8 space-y-4"
+          action="/join"
+          method="post"
+        >
+          <div className="form-control">
+            <label className="label" htmlFor="name">
+              Your Name
+            </label>
+            <input
+              className="input input-bordered"
+              type="text"
+              name="name"
+              placeholder="Name"
+            />
+          </div>
 
-        <button className="btn mt-4" type="submit">
-          Join
-        </button>
-      </Form>
+          <div className="form-control" hidden={!!loaderData}>
+            {!loaderData && (
+              <label className="label" htmlFor="pollId">
+                Poll ID
+              </label>
+            )}
+            <input
+              hidden={!!loaderData}
+              className="input input-bordered"
+              name="pollId"
+              defaultValue={loaderData?.poll?.id}
+              placeholder="Poll ID"
+            />
+          </div>
+
+          <button className="btn btn-primary mt-4" type="submit">
+            Join
+          </button>
+        </Form>
+      </div>
     </div>
   );
 };

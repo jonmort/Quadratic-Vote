@@ -17,7 +17,9 @@ const createFormSchema = Yup.object({
   title: Yup.string().required().label("Title"),
   initialCredits: Yup.number()
     .required("Initial Credits is required")
-    .integer("Initial Credits should be an integer"),
+    .min(0)
+    .integer("Initial Credits should be an integer")
+    .label('Initial Credits'),
   questions: Yup.array().of(Yup.string().required()).min(2).label("Questions"),
 });
 
@@ -70,59 +72,75 @@ const CreatePoll = () => {
 
   return (
     <Form
-      className="container mx-auto text-center flex flex-col items-center space-y-4"
+      className="container mx-auto flex flex-col pb-4 space-y-4"
       method="post"
       action="/create"
     >
-      <h1 className="text-4xl my-16">Create a New Poll</h1>
-      <div className="bg-red-200 w-full p-4" hidden={!actionData?.error}>
-        <h2 className="text-lg">{actionData?.error}</h2>
-      </div>
-      <div className="input-group">
-        <label htmlFor="title" className="input-label">
-          Title
-        </label>
-        <input className="input" type="text" name="title" />
-        <p className="error-text" hidden={!actionData?.fieldErrors?.title}>
-          {actionData?.fieldErrors?.title}
-        </p>
-      </div>
-      <div className="input-group">
-        <label className="input-label" htmlFor="initialCredits">
-          Initial Credits:
-        </label>
-        <input className="input" type="number" name="initialCredits" required />
-        <p
-          className="error-text"
-          hidden={!actionData?.fieldErrors?.initialCredits}
-        >
-          {actionData?.fieldErrors?.initialCredits}
-        </p>
-      </div>
-      {[...Array(questionCount)].map((_, i) => (
-        <div key={i} className="input-group">
-          <label className="input-label" htmlFor="questions">
-            Question {i + 1}:
+      <div className="prose w-full">
+        <h1 className="my-8">Create a New Poll</h1>
+        <div className="bg-error w-full p-4" hidden={!actionData?.error}>
+          <h2>{actionData?.error}</h2>
+        </div>
+        <div className="form-control">
+          <label htmlFor="title" className="label">
+            Title
           </label>
-          <input className="input" name="questions" />
+          <input className="input input-bordered" type="text" name="title" />
           <p
-            className="error-text"
-            hidden={!actionData?.fieldErrors?.questions}
+            className="label label-text-alt mt-0 text-error"
+            hidden={!actionData?.fieldErrors?.title}
           >
-            {actionData?.fieldErrors?.questions}
+            {actionData?.fieldErrors?.title}
           </p>
         </div>
-      ))}
-      <div className="flex space-x-2 justify-start">
-        <button className="btn" onClick={addQuestion}>Add Question</button>
-        <button className="btn" onClick={removeQuestion} hidden={questionCount < 2}>
-          Remove Question
+        <div className="form-control">
+          <label className="label" htmlFor="initialCredits">
+            Initial Credits:
+          </label>
+          <input
+            className="input input-bordered"
+            type="number"
+            name="initialCredits"
+            required
+          />
+          <p
+            className="label label-text-alt mt-0 text-error"
+            hidden={!actionData?.fieldErrors?.initialCredits}
+          >
+            {actionData?.fieldErrors?.initialCredits}
+          </p>
+        </div>
+        {[...Array(questionCount)].map((_, i) => (
+          <div key={i} className="form-control">
+            <label className="label" htmlFor="questions">
+              Question {i + 1}:
+            </label>
+            <input className="input input-bordered" name="questions" />
+            <p
+              className="label label-text-alt mt-0 text-error"
+              hidden={!actionData?.fieldErrors?.questions}
+            >
+              {actionData?.fieldErrors?.questions}
+            </p>
+          </div>
+        ))}
+        <div className="flex space-x-2 justify-start">
+          <button className="btn" onClick={addQuestion}>
+            Add Question
+          </button>
+          <button
+            className="btn"
+            onClick={removeQuestion}
+            hidden={questionCount < 2}
+          >
+            Remove Question
+          </button>
+        </div>
+
+        <button className="btn btn-primary mt-4 w-full" type="submit">
+          Create Poll
         </button>
       </div>
-
-      <button className="btn" type="submit">
-        Submit
-      </button>
     </Form>
   );
 };

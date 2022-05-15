@@ -2,23 +2,22 @@ import type { Option, Poll, Vote, Voter } from "@prisma/client";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import CurrentStatus from "~/components/CurrentStatus";
 import { db } from "~/utils/prisma.server";
 
 type LoaderData = {
   poll: Poll;
-  options: Option[];
+  options: (Option & {
+    vote: Vote[];
+  })[];
   voters: (Voter & {
     votes: Vote[];
   })[];
-  questions: {
-    question: string;
-    votes: number;
-  }[];
 };
 
-export const meta: MetaFunction = ({data}) => ({
-  title: `Poll: ${data?.poll?.title}`
-})
+export const meta: MetaFunction = ({ data }) => ({
+  title: `Poll: ${data?.poll?.title}`,
+});
 
 export const loader: LoaderFunction = async ({ params }) => {
   const poll = await db.poll.findFirst({
@@ -36,47 +35,40 @@ export const loader: LoaderFunction = async ({ params }) => {
 
   const options = await db.option.findMany({
     where: { pollId: params.pollId },
+    include: { vote: true },
     orderBy: { vote: { _count: "desc" } },
   });
 
-  const questions = options.sort().map((option) => ({
-    question: option.text,
-    votes: voters.reduce((prev, current) => {
-      const votesFor = current.votes.filter(
-        (vote) => vote.optionId === option.id
-      ).length;
-      return votesFor > 0 ? prev + votesFor : prev;
-    }, 0),
-  }));
-
-  return { poll, voters, questions };
+  return { poll, voters, options };
 };
 
 const PollDetails = () => {
-  const { poll, questions, voters } = useLoaderData<LoaderData>();
+  const { poll, voters, options } = useLoaderData<LoaderData>();
 
   return (
-    <div className="mx-auto container text-center">
-      <h1 className="my-8 text-3xl text-teal-500">{poll.title}</h1>
-      <div className="my-4">
-        <h2 className="text-xl">Current Votes</h2>
-        <ul className="mt-2">
-          {questions.map((q) => (
-            <li key={q.question}>
-              {q.question} - <span className="text-teal-700">Votes: {q.votes}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="my-4">
-        <h2 className="text-xl">Voters</h2>
-        <ul className="mt-2">
-          {voters.map((v) => (
-            <li key={v.id}>
-              <Link className="underline" to={`/vote/${v.id}`}>{v.name}</Link> - <span className="text-teal-700">Credits remaining: {v.credits}</span>
-            </li>
-          ))}
-        </ul>
+    <div className="mx-auto container prose">
+      <h1 className="my-8 text-primary">{poll.title}</h1>
+      <div className="grid grid-cols-4 min-h-[50vh]">
+        <div className="col-span-3">
+          <CurrentStatus options={options} />
+        </div>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Voters</h2>
+            <ul className="mt-2">
+              {voters.map((v) => (
+                <li key={v.id}>
+                  <Link className="underline text-primary" to={`/vote/${v.id}`}>
+                    {v.name}
+                  </Link>{" "}
+                  <p className="text-secondary text-xs mt-0">
+                    Credits remaining: {v.credits}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );

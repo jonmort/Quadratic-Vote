@@ -1,20 +1,24 @@
 import type { Option, Poll, Vote, Voter } from "@prisma/client";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
 import { db } from "~/utils/prisma.server";
+import Voting from "~/components/Voting";
+import CurrentStatus from "~/components/CurrentStatus";
 
-type LoaderData = {
+export type VoterLoaderData = {
   voter: Voter & {
     votes: Vote[];
     poll: Poll;
   };
-  options: Option[];
+  options: (Option & {
+    vote: Vote[];
+  })[];
 };
 
-export const meta: MetaFunction = ({data}) => ({
-  title: `Voting for ${data.voter.poll.title}`
-})
+export const meta: MetaFunction = ({ data }) => ({
+  title: `Voting for ${data.voter.poll.title}`,
+});
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { voterId } = params;
@@ -28,68 +32,56 @@ export const loader: LoaderFunction = async ({ params }) => {
     throw new Response("Voter not found", { status: 404 });
   }
 
-  const options = await db.option.findMany({ where: { pollId: voter.pollId } });
+  const options = await db.option.findMany({
+    where: { pollId: voter.pollId },
+    include: { vote: true },
+  });
 
   return { voter, options };
 };
 
-const Voting = () => {
+const VotingPage = () => {
   const {
     options,
-    voter: { votes, credits, id, poll, name },
-  } = useLoaderData<LoaderData>();
-  const fetcher = useFetcher();  
+    voter: { credits, poll, name, id, votes },
+  } = useLoaderData<VoterLoaderData>();
 
   return (
-    <div className="container mx-auto text-center">
-      <h2 className="text-3xl my-6">Hi <span className="text-teal-500">{name}</span></h2>
-      <h2 className="text-3xl my-6">
-        Voting for{" "}
-        <Link target="_blank" className="text-teal-500 underline" to={`/poll/${poll.id}`}>
-          {poll.title}
-        </Link>
-      </h2>
-      <p className="text-2xl">
-        Remaining credits: <span className="text-teal-500">{credits}</span>
-      </p>
-      <div className="bg-red-200 w-full p-4 mt-4" hidden={!fetcher?.data}>
-        <h2 className="text-lg">{fetcher?.data}</h2>
+    <div className="container mx-auto">
+      <div className="prose">
+        <h2 className="text-3xl my-6">
+          Hi <span className="text-primary">{name}</span>
+        </h2>
+        <h2 className="text-3xl my-6">
+          Voting for{" "}
+          <Link
+            target="_blank"
+            className="text-secondary underline"
+            to={`/poll/${poll.id}`}
+          >
+            {poll.title}
+          </Link>
+        </h2>
+        <p className="text-2xl">
+          Remaining credits: <span className="text-primary font-bold">{credits}</span>
+        </p>
       </div>
-      <ul className="mt-8">
-        {options.map((option) => {
-          const myVotes = votes.reduce(
-            (acc, val) => (val.optionId === option.id ? acc + 1 : acc),
-            0
-          );
-          const optionId = option.id;
-
-          return (
-            <li className="my-8 flex flex-col items-center" key={option.id}>
-              <p className="text-xl">
-                {option.text} - My votes: {myVotes}
-              </p>
-              <div className="flex space-x-4 items-center mt-2">
-                <fetcher.Form action="/vote/increment" method="post">
-                  <input hidden name="optionId" value={optionId} readOnly />
-                  <input hidden name="voterId" value={id} readOnly />
-                  <button disabled={fetcher.state === 'submitting'} type="submit" className="btn">
-                    Add Votes
-                  </button>
-                </fetcher.Form>
-                <fetcher.Form action="/vote/decrement" method="post">
-                  <input hidden name="optionId" value={optionId} readOnly />
-                  <input hidden name="voterId" value={id} readOnly />
-                  <button disabled={fetcher.state === 'submitting'} type="submit" className="btn">
-                    Reduce Votes
-                  </button>
-                </fetcher.Form>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="flex mt-8 space-x-4">
+        <div className="card bg-base-300">
+          <div className="card-body">
+            <h2 className="card-title">Voting</h2>
+            <Voting options={options} votes={votes} voterId={id} />
+          </div>
+        </div>
+        <div className="card bg-base-300 flex-grow">
+          <div className="card-body">
+            <h2 className="card-title">Current Status</h2>
+            <CurrentStatus options={options} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Voting;
+export default VotingPage;
