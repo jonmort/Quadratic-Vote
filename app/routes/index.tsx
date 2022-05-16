@@ -17,7 +17,8 @@ const Home = () => {
                 Your Existing Polls
               </h2>
               <div>
-                <ul className="pl-4 prose-a:no-underline text-lg text-primary">
+                <p>Soon...</p>
+                {/* <ul className="pl-4 prose-a:no-underline text-lg text-primary">
                   <li>
                     <Link to="/">Something</Link>
                   </li>
@@ -30,7 +31,7 @@ const Home = () => {
                   <li>
                     <Link to="/">Something</Link>
                   </li>
-                </ul>
+                </ul> */}
               </div>
             </div>
           </div>
