@@ -1,7 +1,7 @@
 import type { Poll } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useTransition } from "@remix-run/react";
 import React from "react";
 import { db } from "~/utils/prisma.server";
 
@@ -50,6 +50,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 const Join = () => {
   const loaderData = useLoaderData<LoaderData>();
+  const transition = useTransition();
 
   return (
     <div className="container mx-auto">
@@ -96,7 +97,7 @@ const Join = () => {
             />
           </div>
 
-          <button className="btn btn-primary mt-4" type="submit">
+          <button className="btn btn-primary mt-4" type="submit" disabled={transition.state === 'submitting'}>
             Join
           </button>
         </Form>
