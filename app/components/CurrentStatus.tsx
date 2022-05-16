@@ -56,7 +56,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({ options }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height={600}>
       <PieChart>
         <Pie
           isAnimationActive={false}
