@@ -1,7 +1,40 @@
-import { Form, Link } from "@remix-run/react";
+import type { Poll } from "@prisma/client";
+import type { LoaderFunction } from "@remix-run/node";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import { db } from "~/utils/prisma.server";
+import { getUserId } from "~/utils/session.server";
+
+type LoaderData = {
+  polls: Poll[];
+};
+
+export const loader: LoaderFunction = async ({
+  request,
+}): Promise<LoaderData> => {
+  const oauthId = await getUserId(request);
+
+  let polls: Poll[] = [];
+
+  if (oauthId) {
+    polls = await db.poll.findMany({
+      where: {
+        OR: [
+          { authorId: oauthId },
+          { voters: { some: { authorId: oauthId } } },
+        ],
+      },
+    });
+  }
+
+  return {
+    polls,
+  };
+};
 
 const Home = () => {
+  const { polls } = useLoaderData<LoaderData>();
+
   return (
     <div className="container mx-auto text-center prose">
       <div className="lg:mt-[20vh] mt-4 mx-4 lg:mx-0">
@@ -17,21 +50,13 @@ const Home = () => {
                 Your Existing Polls
               </h2>
               <div>
-                <p>Soon...</p>
-                {/* <ul className="pl-4 prose-a:no-underline text-lg text-primary">
-                  <li>
-                    <Link to="/">Something</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Something</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Something</Link>
-                  </li>
-                  <li>
-                    <Link to="/">Something</Link>
-                  </li>
-                </ul> */}
+                <ul className="pl-4 prose-a:no-underline text-lg text-primary">
+                  {polls.map((poll) => (
+                    <li key={poll.id}>
+                      <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>

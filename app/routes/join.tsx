@@ -4,44 +4,63 @@ import { redirect } from "@remix-run/node";
 import { Form, useLoaderData, useTransition } from "@remix-run/react";
 import React from "react";
 import { db } from "~/utils/prisma.server";
+import { getUserId, getUserNameByOauthId } from "~/utils/session.server";
 
 type LoaderData = {
-  poll: Poll;
-} | null;
+  poll: Poll | null;
+  username: string | null;
+};
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({
+  request,
+}): Promise<LoaderData> => {
+  const userId = await getUserId(request);
+  let username = null;
+  let poll: Poll | null = null;
+
+  if (userId) {
+    username = await getUserNameByOauthId(userId);
+  }
+
   const url = new URL(request.url);
   const pollId = url.searchParams.get("pollId");
 
-  if (!pollId) {
-    return null;
-  }
+  if (!pollId) return { poll, username };
 
-  const poll = await db.poll.findFirst({
+  poll = await db.poll.findFirst({
     where: { id: pollId },
   });
 
-  if (!poll) return redirect("/join");
+  if (!poll) throw redirect("/join");
 
   return {
     poll,
+    username,
   };
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  const authorId = await getUserId(request);
   const formData = await request.formData();
   const formValues = Object.fromEntries(formData.entries());
+  const pollId = formValues.pollId as string;
+  let name = formValues.name as string;
+
+  if (authorId) {
+    name = await getUserNameByOauthId(authorId);
+  }
 
   const poll = await db.poll.findFirst({
-    where: { id: formValues.pollId as string },
+    where: { id: pollId },
     select: { initialCredits: true },
   });
 
   const newVoter = await db.voter.create({
     data: {
-      pollId: formValues.pollId as string,
-      name: formValues.name as string,
+      pollId,
+      name,
       credits: poll!.initialCredits,
+      authorId,
     },
   });
 
@@ -49,32 +68,42 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 const Join = () => {
-  const loaderData = useLoaderData<LoaderData>();
+  const { poll, username } = useLoaderData<LoaderData>();
   const transition = useTransition();
 
   return (
     <div className="container mx-auto">
       <div className="prose w-full">
-        <h1 className="my-6">
-          {loaderData ? (
-            <span>
-              Joining Poll{" "}
-              <span className="text-teal-500">{loaderData.poll.title}</span>
-            </span>
-          ) : (
-            <span>Enter your name and the Poll ID</span>
+        <div className="my-6">
+          {username && (
+            <h1>
+              Hi <span className="text-primary">{username}</span>
+            </h1>
           )}
-        </h1>
+          <h1>
+            {poll ? (
+              <span>
+                Joining Poll <span className="text-primary">{poll.title}</span>
+              </span>
+            ) : (
+              <span>Please fill in the form.</span>
+            )}
+          </h1>
+        </div>
         <Form
           className="flex flex-col mt-8 space-y-4"
           action="/join"
           method="post"
         >
           <div className="form-control">
-            <label className="label" htmlFor="name">
-              Your Name
-            </label>
+            {!username && (
+              <label className="label" htmlFor="name">
+                Your Name
+              </label>
+            )}
             <input
+              hidden={!!username}
+              defaultValue={username || ""}
               className="input input-bordered"
               type="text"
               name="name"
@@ -82,22 +111,26 @@ const Join = () => {
             />
           </div>
 
-          <div className="form-control" hidden={!!loaderData}>
-            {!loaderData && (
+          <div className="form-control" hidden={!!poll}>
+            {!poll && (
               <label className="label" htmlFor="pollId">
                 Poll ID
               </label>
             )}
             <input
-              hidden={!!loaderData}
+              hidden={!!poll}
               className="input input-bordered"
               name="pollId"
-              defaultValue={loaderData?.poll?.id}
+              defaultValue={poll?.id}
               placeholder="Poll ID"
             />
           </div>
 
-          <button className="btn btn-primary mt-4" type="submit" disabled={transition.state === 'submitting'}>
+          <button
+            className="btn btn-primary mt-4"
+            type="submit"
+            disabled={transition.state === "submitting"}
+          >
             Join
           </button>
         </Form>

@@ -5,6 +5,7 @@ import { Form, useActionData } from "@remix-run/react";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { db } from "~/utils/prisma.server";
+import { getUserId } from "~/utils/session.server";
 
 type ActionData = {
   fieldErrors?: {
@@ -24,6 +25,7 @@ const createFormSchema = Yup.object({
 });
 
 export const action: ActionFunction = async ({ request }) => {
+  const authorId = await getUserId(request)
   const formData = await request.formData();
 
   const formValues = {
@@ -40,6 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
       data: {
         title: validatedValues.title,
         initialCredits: validatedValues.initialCredits,
+        authorId,
         options: {
           create: validatedValues.questions?.map((question) => ({
             text: question,

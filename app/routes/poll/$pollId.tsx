@@ -46,7 +46,7 @@ const PollDetails = () => {
   const { poll, voters, options } = useLoaderData<LoaderData>();
 
   return (
-    <div className="mx-auto container prose">
+    <div className="mx-auto container prose max-w-[80vw]">
       <h1 className="my-8 text-primary">{poll.title}</h1>
       <div className="grid grid-cols-4 min-h-[50vh]">
         <div className="col-span-3">
