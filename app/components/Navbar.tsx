@@ -3,7 +3,7 @@ import React from "react";
 import type { RootLoaderData } from "~/root";
 
 const Navbar = () => {
-  const data = useLoaderData<RootLoaderData>();  
+  const data = useLoaderData<RootLoaderData>();
 
   return (
     <div className="navbar bg-base-100">
@@ -12,27 +12,30 @@ const Navbar = () => {
           Quadratic Vote
         </Link>
       </div>
-      {!data.isLoggedIn ? (
-        <>
-          <div
-            id="g_id_onload"
-            data-client_id={data.clientId}
-            data-context="signin"
-            data-ux_mode="popup"
-            data-login_uri={data.redirectUri}
-            data-auto_prompt="true"
-          ></div>
-          <div
-            className="g_id_signin"
-            data-type="standard"
-            data-shape="pill"
-            data-theme="filled_blue"
-            data-text="signin_with"
-            data-size="medium"
-            data-logo_alignment="left"
-          ></div>
-        </>
-      ) : <Link to='/auth/logout' className="btn btn-sm">Logout</Link>}
+      <div
+        className="g_id_signin"
+        data-type="standard"
+        data-shape="pill"
+        data-theme="filled_blue"
+        data-text="signin_with"
+        data-size="medium"
+        data-logo_alignment="left"
+        hidden={data.isLoggedIn}
+      ></div>
+      <div
+        hidden={data.isLoggedIn}
+        id="g_id_onload"
+        data-client_id={data.clientId}
+        data-context="signin"
+        data-ux_mode="popup"
+        data-login_uri={data.redirectUri}
+        data-auto_prompt="false"
+      ></div>
+      {data.isLoggedIn && (
+        <Link to="/auth/logout" className="btn btn-sm">
+          Logout
+        </Link>
+      )}
     </div>
   );
 };
