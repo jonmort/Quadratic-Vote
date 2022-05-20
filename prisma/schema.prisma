@@ -16,7 +16,9 @@ model Poll {
   createdAt      DateTime @default(now())
   options        Option[]
   initialCredits Int
-  voters          Voter[]
+  voters         Voter[]
+  author         User?     @relation(fields: [authorId], references: [oauthId])
+  authorId       String?
 }
 
 model Option {
@@ -29,18 +31,30 @@ model Option {
 }
 
 model Vote {
-  id       Int    @id @default(autoincrement())
-  option   Option @relation(fields: [optionId], references: [id])
+  id       Int     @id @default(autoincrement())
+  option   Option  @relation(fields: [optionId], references: [id])
   optionId Int
-  voter    Voter? @relation(fields: [voterId], references: [id], onDelete: Cascade)
+  voter    Voter?  @relation(fields: [voterId], references: [id], onDelete: Cascade)
   voterId  String?
 }
 
 model Voter {
-  id      String    @id @default(cuid())
+  id       String @id @default(cuid())
+  name     String
+  votes    Vote[]
+  poll     Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  credits  Int
+  pollId   String
+  author   User?   @relation(fields: [authorId], references: [oauthId])
+  authorId String?
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
   name    String
-  votes   Vote[]
-  poll    Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  credits Int
-  pollId  String
+  oauthId String  @unique
+  voters  Voter[]
+  polls   Poll[]
+
+  @@index([oauthId])
 }
