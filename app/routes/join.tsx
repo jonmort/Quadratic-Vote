@@ -72,18 +72,18 @@ const Join = () => {
   const transition = useTransition();
 
   return (
-    <div className="container mx-auto">
+    <div className="container  max-w-3xl mx-auto">
       <div className="prose w-full">
-        <div className="my-6">
+        <div className="my-6 text-center">
           {username && (
             <h1>
-              Hi <span className="text-primary">{username}</span>
+              Hi <span className="text-primary3">{username}</span>
             </h1>
           )}
           <h1>
             {poll ? (
               <span>
-                Joining Poll <span className="text-primary">{poll.title}</span>
+                Joining Poll <span className="text-primary3">{poll.title}</span>
               </span>
             ) : (
               <span>Please fill in the form.</span>
@@ -91,7 +91,7 @@ const Join = () => {
           </h1>
         </div>
         <Form
-          className="flex flex-col mt-8 space-y-4"
+          className="flex flex-col space-y-4"
           action="/join"
           method="post"
         >
@@ -104,7 +104,7 @@ const Join = () => {
             <input
               hidden={!!username}
               defaultValue={username || ""}
-              className="input input-bordered"
+              className="input"
               type="text"
               name="name"
               placeholder="Name"
@@ -119,7 +119,7 @@ const Join = () => {
             )}
             <input
               hidden={!!poll}
-              className="input input-bordered"
+              className="input"
               name="pollId"
               defaultValue={poll?.id}
               placeholder="Poll ID"
@@ -127,7 +127,7 @@ const Join = () => {
           </div>
 
           <button
-            className="btn btn-primary mt-4"
+            className="btn bg-accent2 mt-4 uppercase"
             type="submit"
             disabled={transition.state === "submitting"}
           >

@@ -43,12 +43,12 @@ export const loader: LoaderFunction = async ({request}): Promise<RootLoaderData>
 
 export default function App() {
   return (
-    <html data-theme="corporate" lang="en">
+    <html lang="en">
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="min-h-screen">
         <Navbar />
         <Outlet />
         <ScrollRestoration />
