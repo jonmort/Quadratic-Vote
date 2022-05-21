@@ -1,4 +1,4 @@
-import type { ActionFunction } from "@remix-run/node";
+import type { ActionFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
@@ -24,6 +24,10 @@ const createFormSchema = Yup.object({
     .label("Initial Credits"),
   questions: Yup.array().of(Yup.string().required()).min(2).label("Questions"),
 });
+
+export const meta: MetaFunction = () => ({
+  title: "Create A New Poll"
+})
 
 export const action: ActionFunction = async ({ request }) => {
   const authorId = await getUserId(request);

@@ -1,5 +1,9 @@
 import type { Poll } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
@@ -11,6 +15,10 @@ export type JoinLoaderData = {
   poll: Poll | null;
   username: string | null;
 };
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: `Joining Poll ${data?.poll?.title || " "}`,
+});
 
 export const loader: LoaderFunction = async ({
   request,
