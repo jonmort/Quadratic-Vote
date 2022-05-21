@@ -25,33 +25,36 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
           const optionId = option.id;
 
           return (
-            <li
-              className="my-8 flex flex-col prose prose-p:m-0"
-              key={option.id}
-            >
-              <h4 className="text-xl">{option.text}</h4>
-              <div className="flex space-x-4 items-center mt-2">
+            <li className="my-8 flex flex-col" key={option.id}>
+              <h4 className="text-2xl">{option.text}</h4>
+              <div className="flex space-x-4 items-center mt-4 justify-between">
                 <fetcher.Form action="/vote/decrement" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
                   <input hidden name="voterId" value={voterId} readOnly />
                   <button
                     disabled={fetcher.state === "submitting"}
                     type="submit"
-                    className="btn btn-sm btn-secondary"
+                    className="btn bg-accent3 w-8 h-8 relative p-0"
                   >
-                    -
+                    <span className="text-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      -
+                    </span>
                   </button>
                 </fetcher.Form>
-                <h4 className="my-0">Current Votes: <span className="text-primary">{myVotes}</span></h4>
+                <h4 className="my-0 text-xl">
+                  Current Votes: <span className="text-secondary">{myVotes}</span>
+                </h4>
                 <fetcher.Form action="/vote/increment" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
                   <input hidden name="voterId" value={voterId} readOnly />
                   <button
                     disabled={fetcher.state === "submitting"}
                     type="submit"
-                    className="btn btn-sm btn-secondary"
+                    className="btn bg-accent3 w-8 h-8 relative p-0"
                   >
-                    +
+                    <span className="text-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      +
+                    </span>
                   </button>
                 </fetcher.Form>
               </div>

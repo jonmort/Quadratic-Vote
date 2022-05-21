@@ -3,9 +3,12 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import React from "react";
 import CurrentStatus from "~/components/CurrentStatus";
+import PollShare from "~/components/PollShare";
+import Voters from "~/components/Voters";
 import { db } from "~/utils/prisma.server";
+import { getUserId } from "~/utils/session.server";
 
-type LoaderData = {
+export type PollLoaderData = {
   poll: Poll;
   options: (Option & {
     vote: Vote[];
@@ -13,13 +16,20 @@ type LoaderData = {
   voters: (Voter & {
     votes: Vote[];
   })[];
+  currentUrl: string;
+  myVotePageId?: string;
 };
 
 export const meta: MetaFunction = ({ data }) => ({
   title: `Poll: ${data?.poll?.title}`,
 });
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({
+  params,
+  request,
+}): Promise<PollLoaderData> => {
+  const oauthId = await getUserId(request);
+  let myVotePageId: string | undefined = undefined;
   const poll = await db.poll.findFirst({
     where: { id: params.pollId },
   });
@@ -39,35 +49,32 @@ export const loader: LoaderFunction = async ({ params }) => {
     orderBy: { vote: { _count: "desc" } },
   });
 
-  return { poll, voters, options };
+  if (oauthId) {
+    myVotePageId = voters.find((voter) => voter.authorId === oauthId)?.id;
+  }
+
+  return { poll, voters, options, currentUrl: request.url, myVotePageId };
 };
 
 const PollDetails = () => {
-  const { poll, voters, options } = useLoaderData<LoaderData>();
+  const { poll, options, myVotePageId } = useLoaderData<PollLoaderData>();
 
   return (
-    <div className="mx-auto container prose max-w-[80vw]">
-      <h1 className="my-8 text-primary">{poll.title}</h1>
-      <div className="grid grid-cols-4 min-h-[50vh]">
-        <div className="col-span-3">
+    <div className="mx-auto container p-2">
+      <div className="prose">
+        <h1 className="my-8 text-secondary text-center">{poll.title}</h1>
+        <PollShare />
+      </div>
+      <div className="grid grid-cols-12 min-h-[50vh] mt-16">
+        <div className="lg:col-span-6 col-span-12">
           <CurrentStatus options={options} />
         </div>
-        <div className="card">
-          <div className="card-body">
-            <h2 className="card-title">Voters</h2>
-            <ul className="mt-2">
-              {voters.map((v) => (
-                <li key={v.id}>
-                  <Link className="underline text-primary" to={`/vote/${v.id}`}>
-                    {v.name}
-                  </Link>{" "}
-                  <p className="text-secondary text-xs mt-0">
-                    Credits remaining: {v.credits}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="lg:col-span-6 col-span-12 prose prose-p:m-0 prose-h3:m-0 prose-table:m-0">
+          <p>{poll.description}</p>
+          <Voters />
+          <Link className="btn bg-accent3 block mt-4 no-underline text-center uppercase" to={`/vote/${myVotePageId}`}>
+            My Vote Page For {poll.title}
+          </Link>
         </div>
       </div>
     </div>

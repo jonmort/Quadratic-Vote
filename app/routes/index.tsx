@@ -1,18 +1,22 @@
 import type { Poll } from "@prisma/client";
 import type { LoaderFunction } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
 import React from "react";
+import ExistingPolls from "~/components/ExistingPolls";
+import HomeHeader from "~/components/HomeHeader";
+import RedirectJoinForm from "~/components/RedirectJoinForm";
 import { db } from "~/utils/prisma.server";
-import { getUserId } from "~/utils/session.server";
+import { getUserId, getUserNameByOauthId } from "~/utils/session.server";
 
-type LoaderData = {
+export type HomeLoaderData = {
   polls: Poll[];
+  username: string | null;
 };
 
 export const loader: LoaderFunction = async ({
   request,
-}): Promise<LoaderData> => {
+}): Promise<HomeLoaderData> => {
   const oauthId = await getUserId(request);
+  let username: HomeLoaderData["username"] = null;
 
   let polls: Poll[] = [];
 
@@ -25,66 +29,31 @@ export const loader: LoaderFunction = async ({
         ],
       },
     });
+    username = await getUserNameByOauthId(oauthId);
   }
 
   return {
     polls,
+    username: username ? username?.split(" ")[0] : null,
   };
 };
 
 const Home = () => {
-  const { polls } = useLoaderData<LoaderData>();
-
   return (
-    <div className="container mx-auto text-center prose">
-      <div className="lg:mt-[20vh] mt-4 mx-4 lg:mx-0">
-        <h1>Welcome to Quadratic Voting</h1>
-        <p className="mt-4">
-          This is a simple website that provides a simple way to create
-          quadratic polls.
-        </p>
-        <div className="flex mt-16 mx-auto justify-between min-h-[20vh] text-left lg:flex-row flex-col">
-          <div className="card bg-base-300 flex-grow lg:w-1/2">
-            <div className="card-body">
-              <h2 className="card-title mt-0 text-center">
-                Your Existing Polls
-              </h2>
-              <div>
-                <ul className="pl-4 prose-a:no-underline text-lg text-primary">
-                  {polls.map((poll) => (
-                    <li key={poll.id}>
-                      <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+    <div className="container mx-auto p-2">
+      <div className="fixed top-0 left-0 bg-primary h-full w-full -z-10" />
+      <div className="grid grid-cols-12 gap-2 mt-[5vh] z-20">
+        <div className="col-span-5 -z-10">
+          <div className="home-image" />
+        </div>
+        <div className="lg:col-span-7 col-span-12 text-white">
+          <HomeHeader />
+          <div className="flex justify-between mt-[10vh] flex-wrap">
+            <div className="flex-grow md:ml-[10vw] md:order-2 md:mt-16">
+              <RedirectJoinForm />
             </div>
-          </div>
-          <div className="divider divider-horizontal"></div>
-          <div className="card bg-base-300 flex-grow lg:w-1/2 lg:mt-0 mt-4">
-            <div className="card-body">
-              <h2 className="card-title mt-0 text-center">New Poll</h2>
-              <div className="card-actions">
-                <div>
-                  <Link className="btn" to="/create">
-                    Create a new poll
-                  </Link>
-                  <div className="divider"></div>
-                  <Form action="/join" method="get">
-                    <div className="flex flex-col">
-                      <input
-                        className="input mb-4"
-                        type="text"
-                        name="pollId"
-                        placeholder="Poll ID"
-                      />
-                      <button type="submit" className="btn">
-                        Join A poll
-                      </button>
-                    </div>
-                  </Form>
-                </div>
-              </div>
+            <div className="md:order-1 md:basis-2/5 basis-full">
+              <ExistingPolls />
             </div>
           </div>
         </div>

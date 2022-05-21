@@ -13,11 +13,12 @@ datasource db {
 model Poll {
   id             String   @id @default(cuid())
   title          String
+  description    String?
   createdAt      DateTime @default(now())
   options        Option[]
   initialCredits Int
   voters         Voter[]
-  author         User?     @relation(fields: [authorId], references: [oauthId])
+  author         User?    @relation(fields: [authorId], references: [oauthId])
   authorId       String?
 }
 
@@ -39,10 +40,10 @@ model Vote {
 }
 
 model Voter {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
   name     String
   votes    Vote[]
-  poll     Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll     Poll    @relation(fields: [pollId], references: [id], onDelete: Cascade)
   credits  Int
   pollId   String
   author   User?   @relation(fields: [authorId], references: [oauthId])

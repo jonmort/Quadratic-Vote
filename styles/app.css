@@ -1,7 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:wght@400;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .prose {
-    max-width: auto;
+  max-width: 100% !important;
+}
+
+@layer components {
+  .btn {
+    @apply lg:px-12 px-6 py-2 rounded-lg text-primary shadow hover:shadow-md transition-shadow;
+  }
+
+  .input {
+    @apply bg-secondary3 px-4 py-2 border-[1px] border-primary2 rounded placeholder:text-primary text-primary m-0;
+  }
+
+  .form-control {
+    @apply flex flex-col mb-4;
+  }
+
+  .form-control label {
+    @apply mb-1 font-bold;
+  }
+
+  .testy-test:hover {
+    filter: drop-shadow(0px 3px 10px black);
+  }
+
+  .hidden-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hidden-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-image {
+    background-image: url("/bg.png"),
+      linear-gradient(
+        270deg,
+        #0e2446 0,
+        rgba(14, 36, 70, 0) 70.55%,
+        rgba(14, 36, 70, 0) 70.55%,
+        rgba(14, 36, 70, 0) 70.55%,
+        rgba(14, 36, 70, 0) 70.55%
+      );
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    right: 60%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-blend-mode: lighten;
+  }
+
+  @media (max-width: 996px) {
+    .home-image {
+      right: 0;
+      filter: blur(4px);
+      opacity: 0.5;
+    }
+  }
 }
