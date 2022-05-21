@@ -16,20 +16,22 @@ type ActionData = {
 
 const createFormSchema = Yup.object({
   title: Yup.string().required().label("Title"),
+  description: Yup.string().label("Description"),
   initialCredits: Yup.number()
     .required("Initial Credits is required")
     .min(0)
     .integer("Initial Credits should be an integer")
-    .label('Initial Credits'),
+    .label("Initial Credits"),
   questions: Yup.array().of(Yup.string().required()).min(2).label("Questions"),
 });
 
 export const action: ActionFunction = async ({ request }) => {
-  const authorId = await getUserId(request)
+  const authorId = await getUserId(request);
   const formData = await request.formData();
 
   const formValues = {
     title: formData.get("title"),
+    description: formData.get("description"),
     initialCredits: formData.get("initialCredits"),
     questions: formData.getAll("questions"),
   };
@@ -42,6 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
       data: {
         title: validatedValues.title,
         initialCredits: validatedValues.initialCredits,
+        description: validatedValues.description || null,
         authorId,
         options: {
           create: validatedValues.questions?.map((question) => ({
@@ -60,6 +63,8 @@ export const action: ActionFunction = async ({ request }) => {
       });
       return json({ fieldErrors });
     } else {
+      console.log(err);
+      
       return json({ error: "Unknown Error." });
     }
   }
@@ -88,12 +93,24 @@ const CreatePoll = () => {
           <label htmlFor="title" className="label">
             Title
           </label>
-          <input className="input" type="text" name="title" />
+          <input className="input" type="text" name="title" required />
           <p
             className="label label-text-alt mt-0 text-red-500"
             hidden={!actionData?.fieldErrors?.title}
           >
             {actionData?.fieldErrors?.title}
+          </p>
+        </div>
+        <div className="form-control">
+          <label htmlFor="description" className="label">
+            Description
+          </label>
+          <textarea className="input" name="description" />
+          <p
+            className="label label-text-alt mt-0 text-red-500"
+            hidden={!actionData?.fieldErrors?.description}
+          >
+            {actionData?.fieldErrors?.description}
           </p>
         </div>
         <div className="form-control">
@@ -128,7 +145,10 @@ const CreatePoll = () => {
           </div>
         ))}
         <div className="flex space-x-2">
-          <button className="btn bg-primary text-secondary3 flex-grow uppercase" onClick={addQuestion}>
+          <button
+            className="btn bg-primary text-secondary3 flex-grow uppercase"
+            onClick={addQuestion}
+          >
             Add Question
           </button>
           <button

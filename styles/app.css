@@ -25,6 +25,19 @@
     @apply mb-1 font-bold;
   }
 
+  .testy-test:hover {
+    filter: drop-shadow(0px 3px 10px black);
+  }
+
+  .hidden-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hidden-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   .home-image {
     background-image: url("/bg.png"),
       linear-gradient(

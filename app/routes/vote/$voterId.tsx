@@ -47,36 +47,33 @@ const VotingPage = () => {
   } = useLoaderData<VoterLoaderData>();
 
   return (
-    <div className="container mx-auto">
-      <div className="prose">
+    <div className="container mx-auto pb-4">
+      <div className="prose text-center">
         <h2 className="text-3xl my-6">
-          Hi <span className="text-primary">{name}</span>
+          Hi <span className="text-accent">{name}</span>
         </h2>
         <h2 className="text-3xl my-6">
           Voting for{" "}
           <Link
             target="_blank"
-            className="text-secondary underline"
+            className="text-secondary no-underline font-bold"
             to={`/poll/${poll.id}`}
           >
             {poll.title}
           </Link>
         </h2>
-        <p className="text-2xl">
-          Remaining credits: <span className="text-primary font-bold">{credits}</span>
-        </p>
+        <p>{poll.description}</p>
       </div>
-      <div className="flex mt-8 space-x-4">
-        <div className="card bg-base-300">
-          <div className="card-body">
-            <h2 className="card-title">Voting</h2>
-            <Voting options={options} votes={votes} voterId={id} />
-          </div>
+      <h3 className="text-3xl">Remaining Credits: <span className="text-secondary">{credits}</span></h3>
+      <div className="grid grid-cols-3 mt-8 gap-8">
+        <div className="p-8 bg-secondary3 rounded">
+          <Voting options={options} votes={votes} voterId={id} />
         </div>
-        <div className="card bg-base-300 flex-grow">
-          <div className="card-body">
-            <h2 className="card-title">Current Status</h2>
-            <CurrentStatus options={options} />
+        <div className="p-8 bg-secondary3 col-span-2 rounded relative">
+          <CurrentStatus options={options} closed />
+          <div className="absolute bottom-4 right-4 text-right">
+            <h3 className="text-xl font-bold">{poll.title}</h3>
+            <p className="text-sm">{poll.id}</p>
           </div>
         </div>
       </div>

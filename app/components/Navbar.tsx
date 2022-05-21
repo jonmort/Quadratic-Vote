@@ -44,9 +44,11 @@ const Navbar = () => {
               Logout
             </Link>
           )}
-          <Link to="/create" className="btn bg-accent3">
-            Create A New Poll
-          </Link>
+          {location.pathname === "/" ? (
+            <Link to="/create" className="btn bg-accent3">
+              Create A New Poll
+            </Link>
+          ) : null}
         </div>
       </div>
     </div>
