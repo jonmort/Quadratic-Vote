@@ -8,6 +8,16 @@
   max-width: 100% !important;
 }
 
+.recharts-wrapper, .recharts-surface {
+  overflow: visible;
+}
+
+@media (max-width: 996px) {
+  .recharts-pie-label-line, .recharts-outer-text {
+    display: none;
+  }
+}
+
 @layer components {
   .btn {
     @apply lg:px-12 px-6 py-2 rounded-lg text-primary shadow hover:shadow-md transition-shadow;
@@ -63,7 +73,7 @@
   @media (max-width: 996px) {
     .home-image {
       right: 0;
-      filter: blur(4px);
+      filter: blur(5px) brightness(0.5);
       opacity: 0.5;
     }
   }

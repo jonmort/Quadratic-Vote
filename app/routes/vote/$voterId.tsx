@@ -68,7 +68,7 @@ const VotingPage = () => {
         Remaining Credits: <span className="text-secondary">{credits}</span>
       </h3>
       <div className="grid grid-cols-3 mt-8 gap-8">
-        <div className="py-8 px-[20vw] lg:px-8 bg-secondary3 rounded col-span-3 lg:col-span-1">
+        <div className="p-8 bg-secondary3 rounded col-span-3 lg:col-span-1">
           <Voting options={options} votes={votes} voterId={id} />
         </div>
         <div className="p-8 bg-secondary3 lg:col-span-2 col-span-3 rounded relative">

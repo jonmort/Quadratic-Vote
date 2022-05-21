@@ -1,6 +1,7 @@
 import type { Option, Vote } from "@prisma/client";
 import React, { useMemo } from "react";
 import type { PieLabel } from "recharts";
+import { Legend } from "recharts";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const COLORS = [
@@ -50,11 +51,12 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
       <>
         {!closed && (
           <text
-            x={x + (radius * Math.cos(-midAngle * RADIAN)) / 2}
-            y={y + (radius * Math.sin(-midAngle * RADIAN)) / 2}
+            x={x + 5 + (radius * Math.cos(midAngle * RADIAN)) / 2}
+            y={y - 5 + (radius * Math.sin(-midAngle * RADIAN)) / 2}
             fill="#0E2446"
             textAnchor={x > cx ? "start" : "end"}
             dominantBaseline="central"
+            className="recharts-outer-text"
           >
             {rest.name}
           </text>
@@ -65,7 +67,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
           fill="white"
           textAnchor={x > cx ? "start" : "end"}
           dominantBaseline="central"
-          fontSize='0.875rem'
+          className="text-sm md:text-md"
         >
           {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -74,36 +76,45 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   };
 
   const renderCustomTooltip = (props: any) => {
-    return <div className="bg-secondary3 p-2 shadow rounded">
-      <h5 className="font-bold">{props?.payload[0]?.name}</h5>
-      <p className="text-sm text-secondary">{props?.payload[0]?.value} votes</p>
-    </div>
-  }
+    return (
+      <div className="bg-secondary3 p-2 shadow rounded">
+        <h5 className="font-bold">{props?.payload[0]?.name}</h5>
+        <p className="text-sm text-secondary">
+          {props?.payload[0]?.value} votes
+        </p>
+      </div>
+    );
+  };
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <PieChart>
-        <Pie
-          innerRadius={closed ? 0 : '50%'}
-          isAnimationActive={false}
-          data={graphOptions}
-          dataKey="votes"
-          nameKey="name"
-          label={(params) => renderCustomizedLabel({ ...params, closed })}
-          labelLine={!closed}
-        >
-          {graphOptions.map((entry, index) => (
-            <Cell
-              className="testy-test"
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
-              stroke="transparent"
-            />
-          ))}
-        </Pie>
-        {closed && <Tooltip content={renderCustomTooltip} />}
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="w-4/5 lg:w-full h-[300px] lg:h-[600px] mx-auto">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            innerRadius={closed ? 0 : "40%"}
+            isAnimationActive={false}
+            data={graphOptions}
+            dataKey="votes"
+            nameKey="name"
+            label={(params) => renderCustomizedLabel({ ...params, closed })}
+            labelLine={!closed}
+          >
+            {graphOptions.map((entry, index) => (
+              <Cell
+                className="testy-test"
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+                stroke="transparent"
+              />
+            ))}
+          </Pie>
+          {closed && <Tooltip content={renderCustomTooltip} />}
+          <div className="md:hidden">
+            <Legend />
+          </div>
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

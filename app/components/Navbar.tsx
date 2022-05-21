@@ -8,25 +8,25 @@ const Navbar = () => {
 
   return (
     <div
-      className={`p-2 relative z-10 ${
+      className={`p-4 relative z-10 ${
         location.pathname !== "/" ? "bg-primary" : ""
       }`}
     >
       <div className="container mx-auto flex items-center justify-center lg:justify-start flex-wrap">
-        <div className="flex-1">
+        <div className="flex-grow">
           <Link to="/" className="flex py-2 text-3xl space-x-2">
             <img src="/qv_logo.png" alt="Quadratic Vote" className="h-10" />
-            <span className="relative text-secondary3">Quadratic Vote</span>
+            <span className="relative text-secondary3 hidden md:inline">Quadratic Vote</span>
           </Link>
         </div>
-        <div className="flex items-center space-x-5">
+        <div className="flex flex-grow-0 items-center md:space-x-4 space-x-2 mt-4 md:mt-0">
           <div
             className="g_id_signin"
             data-type="standard"
             data-shape="pill"
             data-theme="filled_blue"
             data-text="signin_with"
-            data-size="medium"
+            data-size="large"
             data-logo_alignment="left"
             hidden={data.isLoggedIn}
           ></div>
@@ -45,8 +45,8 @@ const Navbar = () => {
             </Link>
           )}
           {location.pathname === "/" ? (
-            <Link to="/create" className="btn bg-accent3">
-              Create A New Poll
+            <Link to="/create" className="btn bg-accent3 whitespace-nowrap">
+              Create New Poll
             </Link>
           ) : null}
         </div>
