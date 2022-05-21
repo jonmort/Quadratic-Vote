@@ -18,15 +18,10 @@
   }
 }
 
-@media (min-width: 996px) {
-  .recharts-legend-wrapper {
-    display: none;
-  }
-}
 
 @layer components {
   .btn {
-    @apply lg:px-12 px-6 py-2 rounded-lg text-primary shadow hover:shadow-md transition-shadow;
+    @apply px-6 py-2 transition-shadow rounded-lg shadow lg:px-12 text-primary hover:shadow-md;
   }
 
   .input {

@@ -5,15 +5,26 @@ import { Legend } from "recharts";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const COLORS = [
-  "#f43f5e",
-  "#d946ef",
-  "#3b82f6",
-  "#06b6d4",
-  "#14b8a6",
-  "#84cc16",
-  "#f97316",
-  "#ef4444",
-  "#78716c",
+  "#2f4f4f",
+  "#2e8b57",
+  "#8b0000",
+  "#808000",
+  "#000080",
+  "#ff0000",
+  "#00ced1",
+  "#ff8c00",
+  "#ffd700",
+  "#7cfc00",
+  "#ba55d3",
+  "#00fa9a",
+  "#0000ff",
+  "#d3d3d3",
+  "#f08080",
+  "#ff00ff",
+  "#1e90ff",
+  "#f0e68c",
+  "#dda0dd",
+  "#ff1493",
 ];
 
 type CurrentStatusProps = {
@@ -49,18 +60,6 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
 
     return percent > 0 ? (
       <>
-        {!closed && (
-          <text
-            x={x + 5 + (radius * Math.cos(midAngle * RADIAN)) / 2}
-            y={y - 5 + (radius * Math.sin(-midAngle * RADIAN)) / 2}
-            fill="#0E2446"
-            textAnchor={x > cx ? "start" : "end"}
-            dominantBaseline="central"
-            className="recharts-outer-text"
-          >
-            {rest.name}
-          </text>
-        )}
         <text
           x={x - 5}
           y={y - 5}
@@ -87,7 +86,11 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   };
 
   return (
-    <div className="w-4/5 lg:w-full h-[300px] lg:h-[600px] mx-auto">
+    <div
+      className={`w-4/5 lg:w-full mx-auto ${
+        options.length > 5 ? "h-[700px] lg:h-[800px]" : "h-[400px] lg:h-[600px]"
+      }`}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -96,8 +99,8 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
             data={graphOptions}
             dataKey="votes"
             nameKey="name"
-            label={(params) => renderCustomizedLabel({ ...params, closed })}
-            labelLine={!closed}
+            label={renderCustomizedLabel}
+            labelLine={false}
           >
             {graphOptions.map((entry, index) => (
               <Cell
@@ -109,7 +112,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
             ))}
           </Pie>
           {closed && <Tooltip content={renderCustomTooltip} />}
-          <Legend />
+          <Legend fontSize="0.5rem" />
         </PieChart>
       </ResponsiveContainer>
     </div>
