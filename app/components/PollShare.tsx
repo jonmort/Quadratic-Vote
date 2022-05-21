@@ -16,15 +16,15 @@ const PollShare = () => {
     <div className="flex rounded">
       <button
         onClick={onClick}
-        className="relative rounded flex justify-between bg-accent3 hover:bg-accent2 active:bg-accent transition-colors mx-auto min-w-[400px]"
+        className="relative rounded flex justify-between bg-accent3 hover:bg-accent2 active:bg-accent transition-colors mx-auto min-w-[20%]"
       >
         <p className="m-0 py-3 px-4">{currentUrl}</p>
-        <div className="flex items-center py-3 px-4">
+        <div className="items-center py-3 px-4 hidden md:flex">
           <span className="h-full w-[1px] bg-primary mx-4"></span>
           <img src="/share.png" alt="share" className="m-0" />
         </div>
         <div
-          className={`bg-secondary3 p-2 absolute -translate-x-1/2 -bottom-full left-1/2 transition-opacity rounded ${
+          className={`bg-secondary3 p-2 absolute -translate-x-1/2 -translate-y-1/2 md:-translate-y-0 -bottom-full left-1/2 transition-opacity rounded ${
             displayState ? "opacity-100" : "opacity-0"
           }`}
         >

@@ -60,11 +60,12 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
           </text>
         )}
         <text
-          x={x}
-          y={y}
+          x={x - 5}
+          y={y - 5}
           fill="white"
           textAnchor={x > cx ? "start" : "end"}
           dominantBaseline="central"
+          fontSize='0.875rem'
         >
           {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -80,10 +81,10 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   }
 
   return (
-    <ResponsiveContainer width="100%" height={600}>
+    <ResponsiveContainer width="100%" height={500}>
       <PieChart>
         <Pie
-          innerRadius={closed ? 0 : 120}
+          innerRadius={closed ? 0 : '50%'}
           isAnimationActive={false}
           data={graphOptions}
           dataKey="votes"

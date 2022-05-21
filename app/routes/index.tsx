@@ -40,18 +40,20 @@ export const loader: LoaderFunction = async ({
 
 const Home = () => {
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto p-2">
       <div className="fixed top-0 left-0 bg-primary h-full w-full -z-10" />
-      <div className="grid grid-cols-12 gap-2 mt-16">
-        <div className="col-span-5">
+      <div className="grid grid-cols-12 gap-2 mt-[5vh] z-20">
+        <div className="col-span-5 -z-10">
           <div className="home-image" />
         </div>
-        <div className="col-span-7 text-white">
+        <div className="lg:col-span-7 col-span-12 text-white">
           <HomeHeader />
-          <div className="flex justify-between mt-[8vw]">
-            <ExistingPolls />
-            <div className="flex-grow ml-[10vw]">
+          <div className="flex justify-between mt-[10vh] flex-wrap">
+            <div className="flex-grow md:ml-[10vw] md:order-2 md:mt-16">
               <RedirectJoinForm />
+            </div>
+            <div className="md:order-1 md:basis-2/5 basis-full">
+              <ExistingPolls />
             </div>
           </div>
         </div>

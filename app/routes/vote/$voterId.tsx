@@ -47,7 +47,7 @@ const VotingPage = () => {
   } = useLoaderData<VoterLoaderData>();
 
   return (
-    <div className="container mx-auto pb-4">
+    <div className="container mx-auto p-2">
       <div className="prose text-center">
         <h2 className="text-3xl my-6">
           Hi <span className="text-accent">{name}</span>
@@ -64,12 +64,14 @@ const VotingPage = () => {
         </h2>
         <p>{poll.description}</p>
       </div>
-      <h3 className="text-3xl">Remaining Credits: <span className="text-secondary">{credits}</span></h3>
+      <h3 className="text-3xl lg:text-left text-center">
+        Remaining Credits: <span className="text-secondary">{credits}</span>
+      </h3>
       <div className="grid grid-cols-3 mt-8 gap-8">
-        <div className="p-8 bg-secondary3 rounded">
+        <div className="py-8 px-[20vw] lg:px-8 bg-secondary3 rounded col-span-3 lg:col-span-1">
           <Voting options={options} votes={votes} voterId={id} />
         </div>
-        <div className="p-8 bg-secondary3 col-span-2 rounded relative">
+        <div className="p-8 bg-secondary3 lg:col-span-2 col-span-3 rounded relative">
           <CurrentStatus options={options} closed />
           <div className="absolute bottom-4 right-4 text-right">
             <h3 className="text-xl font-bold">{poll.title}</h3>

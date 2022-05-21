@@ -8,11 +8,11 @@ const Navbar = () => {
 
   return (
     <div
-      className={`py-2 relative z-10 ${
+      className={`p-2 relative z-10 ${
         location.pathname !== "/" ? "bg-primary" : ""
       }`}
     >
-      <div className="container mx-auto flex items-center">
+      <div className="container mx-auto flex items-center justify-center lg:justify-start flex-wrap">
         <div className="flex-1">
           <Link to="/" className="flex py-2 text-3xl space-x-2">
             <img src="/qv_logo.png" alt="Quadratic Vote" className="h-10" />
