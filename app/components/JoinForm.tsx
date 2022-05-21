@@ -40,7 +40,7 @@ const JoinForm = () => {
       </div>
 
       <button
-        className="btn bg-accent2 mt-4 uppercase"
+        className="mt-4 uppercase btn bg-accent2"
         type="submit"
         disabled={transition.state === "submitting"}
       >

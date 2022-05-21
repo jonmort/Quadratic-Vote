@@ -10,7 +10,7 @@ const PollItem: React.FC<PollItemProps> = ({ poll }) => {
   return (
     <Link
       to={`/poll/${poll.id}`}
-      className="bg-secondary3 text-primary rounded p-6 hover:underline"
+      className="p-6 rounded bg-secondary3 text-primary hover:underline"
       key={poll.id}
     >
       <h3 className="text-xl font-bold ">{poll.title}</h3>

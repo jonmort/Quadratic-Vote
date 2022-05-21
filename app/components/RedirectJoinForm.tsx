@@ -6,12 +6,12 @@ const RedirectJoinForm = () => {
     <Form className="flex pb-4" action="/join" method="get">
       <div className="flex flex-col w-full">
         <input
-          className="input mb-4"
+          className="mb-4 input"
           type="text"
           name="pollId"
           placeholder="Poll ID"
         />
-        <button type="submit" className="btn bg-accent3 uppercase">
+        <button type="submit" className="uppercase btn bg-accent3">
           Join A poll
         </button>
       </div>

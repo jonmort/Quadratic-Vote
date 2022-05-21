@@ -80,13 +80,13 @@ const CreatePoll = () => {
 
   return (
     <Form
-      className="container max-w-3xl mx-auto flex flex-col pb-4 space-y-4"
+      className="container flex flex-col max-w-3xl p-4 pb-4 mx-auto space-y-4"
       method="post"
       action="/create"
     >
-      <div className="prose w-full prose-p:mb-0">
-        <h1 className="my-8 capitalize text-center">Create a New Poll</h1>
-        <div className="bg-red-300 w-full p-4" hidden={!actionData?.error}>
+      <div className="w-full prose prose-p:mb-0">
+        <h1 className="my-8 text-center capitalize">Create a New Poll</h1>
+        <div className="w-full p-4 bg-red-300" hidden={!actionData?.error}>
           <h2>{actionData?.error}</h2>
         </div>
         <div className="form-control">
@@ -95,7 +95,7 @@ const CreatePoll = () => {
           </label>
           <input className="input" type="text" name="title" required />
           <p
-            className="label label-text-alt mt-0 text-red-500"
+            className="mt-0 text-red-500 label label-text-alt"
             hidden={!actionData?.fieldErrors?.title}
           >
             {actionData?.fieldErrors?.title}
@@ -107,7 +107,7 @@ const CreatePoll = () => {
           </label>
           <textarea className="input" name="description" />
           <p
-            className="label label-text-alt mt-0 text-red-500"
+            className="mt-0 text-red-500 label label-text-alt"
             hidden={!actionData?.fieldErrors?.description}
           >
             {actionData?.fieldErrors?.description}
@@ -124,7 +124,7 @@ const CreatePoll = () => {
             required
           />
           <p
-            className="label label-text-alt mt-0 text-red-500"
+            className="mt-0 text-red-500 label label-text-alt"
             hidden={!actionData?.fieldErrors?.initialCredits}
           >
             {actionData?.fieldErrors?.initialCredits}
@@ -137,7 +137,7 @@ const CreatePoll = () => {
             </label>
             <input className="input" name="questions" />
             <p
-              className="label label-text-alt mt-0 text-red-500"
+              className="mt-0 text-red-500 label label-text-alt"
               hidden={!actionData?.fieldErrors?.questions}
             >
               {actionData?.fieldErrors?.questions}
@@ -146,13 +146,13 @@ const CreatePoll = () => {
         ))}
         <div className="flex space-x-2">
           <button
-            className="btn bg-primary text-secondary3 flex-grow uppercase"
+            className="flex-grow uppercase btn bg-primary text-secondary3"
             onClick={addQuestion}
           >
             Add Question
           </button>
           <button
-            className="btn bg-primary text-secondary3 flex-grow uppercase"
+            className="flex-grow uppercase btn bg-primary text-secondary3"
             onClick={removeQuestion}
             hidden={questionCount < 2}
           >
@@ -160,7 +160,7 @@ const CreatePoll = () => {
           </button>
         </div>
 
-        <button className="btn bg-accent2 uppercase mt-4 w-full" type="submit">
+        <button className="w-full mt-4 uppercase btn bg-accent2" type="submit">
           Create Poll
         </button>
       </div>

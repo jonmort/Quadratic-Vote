@@ -60,9 +60,9 @@ const PollDetails = () => {
   const { poll, options, myVotePageId } = useLoaderData<PollLoaderData>();
 
   return (
-    <div className="mx-auto container p-4">
+    <div className="container p-4 mx-auto">
       <div className="prose">
-        <h1 className="my-8 text-secondary text-center">{poll.title}</h1>
+        <h1 className="my-8 text-center text-secondary">{poll.title}</h1>
         <PollShare />
       </div>
       <div className="grid grid-cols-12 min-h-[50vh] mt-[5vh]">
@@ -72,7 +72,7 @@ const PollDetails = () => {
         <div className="flex flex-col lg:col-span-6 col-span-12 prose prose-p:m-0 prose-h3:m-0 prose-table:m-0">
           <p>{poll.description}</p>
           <Link
-            className="btn bg-accent3 block mt-4 no-underline text-center uppercase lg:order-2"
+            className="block mt-4 text-center no-underline uppercase btn bg-accent3 lg:order-2"
             to={`/vote/${myVotePageId}`}
           >
             My Vote Page For {poll.title}

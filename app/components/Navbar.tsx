@@ -12,14 +12,14 @@ const Navbar = () => {
         location.pathname !== "/" ? "bg-primary" : ""
       }`}
     >
-      <div className="container mx-auto flex items-center justify-center lg:justify-start flex-wrap">
+      <div className="container flex flex-wrap items-center justify-center mx-auto lg:justify-start">
         <div className="flex-grow">
           <Link to="/" className="flex py-2 text-3xl space-x-2">
             <img src="/qv_logo.png" alt="Quadratic Vote" className="h-10" />
-            <span className="relative text-secondary3 hidden md:inline">Quadratic Vote</span>
+            <span className="relative hidden text-secondary3 md:inline">Quadratic Vote</span>
           </Link>
         </div>
-        <div className="flex flex-grow-0 items-center md:space-x-4 space-x-2 mt-4 md:mt-0">
+        <div className="flex items-center flex-grow-0 md:space-x-4 space-x-2 md:mt-0">
           <div
             className="g_id_signin"
             data-type="standard"

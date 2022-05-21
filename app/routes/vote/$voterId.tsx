@@ -47,16 +47,16 @@ const VotingPage = () => {
   } = useLoaderData<VoterLoaderData>();
 
   return (
-    <div className="container mx-auto p-2">
-      <div className="prose text-center">
-        <h2 className="text-3xl my-6">
+    <div className="container p-2 mx-auto">
+      <div className="text-center prose">
+        <h2 className="my-6 text-3xl">
           Hi <span className="text-accent">{name}</span>
         </h2>
-        <h2 className="text-3xl my-6">
+        <h2 className="my-6 text-3xl">
           Voting for{" "}
           <Link
             target="_blank"
-            className="text-secondary no-underline font-bold"
+            className="font-bold no-underline text-secondary"
             to={`/poll/${poll.id}`}
           >
             {poll.title}
@@ -64,16 +64,16 @@ const VotingPage = () => {
         </h2>
         <p>{poll.description}</p>
       </div>
-      <h3 className="text-3xl lg:text-left text-center">
+      <h3 className="text-3xl text-center lg:text-left">
         Remaining Credits: <span className="text-secondary">{credits}</span>
       </h3>
-      <div className="grid grid-cols-3 mt-8 gap-8">
-        <div className="p-8 bg-secondary3 rounded col-span-3 lg:col-span-1">
+      <div className="mt-8 grid grid-cols-3 gap-8">
+        <div className="p-8 rounded bg-secondary3 col-span-3 lg:col-span-1">
           <Voting options={options} votes={votes} voterId={id} />
         </div>
-        <div className="p-8 bg-secondary3 lg:col-span-2 col-span-3 rounded relative">
+        <div className="relative p-8 rounded bg-secondary3 lg:col-span-2 col-span-3">
           <CurrentStatus options={options} closed />
-          <div className="absolute bottom-4 right-4 text-right">
+          <div className="absolute text-right bottom-4 right-4">
             <h3 className="text-xl font-bold">{poll.title}</h3>
             <p className="text-sm">{poll.id}</p>
           </div>

@@ -6,7 +6,7 @@ const Voters = () => {
   const { voters } = useLoaderData<PollLoaderData>();
 
   return (
-    <div className="p-10 bg-secondary3 rounded mt-8">
+    <div className="p-10 mt-8 rounded bg-secondary3">
       <table className="w-full">
         <thead>
           <tr>

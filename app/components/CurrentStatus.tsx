@@ -77,7 +77,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
 
   const renderCustomTooltip = (props: any) => {
     return (
-      <div className="bg-secondary3 p-2 shadow rounded">
+      <div className="p-2 rounded shadow bg-secondary3">
         <h5 className="font-bold">{props?.payload[0]?.name}</h5>
         <p className="text-sm text-secondary">
           {props?.payload[0]?.value} votes
@@ -109,9 +109,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
             ))}
           </Pie>
           {closed && <Tooltip content={renderCustomTooltip} />}
-          <div className="md:hidden">
-            <Legend />
-          </div>
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>

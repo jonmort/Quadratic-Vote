@@ -15,7 +15,7 @@ const ExistingPolls = () => {
           ))}
         </div>
       ) : (
-        <div className="bg-secondary3 text-primary rounded p-6">
+        <div className="p-6 rounded bg-secondary3 text-primary">
           <h3 className="text-lg">Login To See Existing Polls</h3>
         </div>
       )}

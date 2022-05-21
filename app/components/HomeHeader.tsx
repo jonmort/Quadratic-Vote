@@ -6,7 +6,7 @@ const HomeHeader = () => {
   const { username } = useLoaderData<HomeLoaderData>();
   return (
     <div className="text-center">
-      <h1 className="text-5xl text-secondary3 font-serif">
+      <h1 className="font-serif text-5xl text-secondary3">
         Welcome <span className="text-accent2">{username}</span> to Quadratic
         Voting!
       </h1>

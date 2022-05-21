@@ -13,7 +13,7 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
 
   return (
     <>
-      <div className="bg-error w-full p-4 mt-4" hidden={!fetcher?.data}>
+      <div className="w-full p-4 mt-4 bg-error" hidden={!fetcher?.data}>
         <h2 className="text-lg">{fetcher?.data}</h2>
       </div>
       <ul>
@@ -25,18 +25,18 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
           const optionId = option.id;
 
           return (
-            <li className="my-8 flex flex-col" key={option.id}>
+            <li className="flex flex-col my-8" key={option.id}>
               <h4 className="text-2xl">{option.text}</h4>
-              <div className="flex space-x-4 items-center mt-4 justify-between">
+              <div className="flex items-center justify-between mt-4 space-x-4">
                 <fetcher.Form action="/vote/decrement" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
                   <input hidden name="voterId" value={voterId} readOnly />
                   <button
                     disabled={fetcher.state === "submitting"}
                     type="submit"
-                    className="btn bg-accent3 w-8 h-8 relative p-0"
+                    className="relative w-8 h-8 p-0 btn bg-accent3"
                   >
-                    <span className="text-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <span className="absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                       -
                     </span>
                   </button>
@@ -50,9 +50,9 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
                   <button
                     disabled={fetcher.state === "submitting"}
                     type="submit"
-                    className="btn bg-accent3 w-8 h-8 relative p-0"
+                    className="relative w-8 h-8 p-0 btn bg-accent3"
                   >
-                    <span className="text-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <span className="absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                       +
                     </span>
                   </button>

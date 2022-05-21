@@ -72,8 +72,8 @@ const Join = () => {
   const { poll, username } = useLoaderData<JoinLoaderData>();
 
   return (
-    <div className="container  max-w-3xl mx-auto">
-      <div className="prose w-full">
+    <div className="container max-w-3xl p-4 mx-auto">
+      <div className="w-full prose">
         <div className="my-6 text-center">
           {username && (
             <h1>
