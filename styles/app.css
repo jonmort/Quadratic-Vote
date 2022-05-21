@@ -21,7 +21,7 @@
 
 @layer components {
   .btn {
-    @apply px-6 py-2 transition-shadow rounded-lg shadow lg:px-12 text-primary hover:shadow-md;
+    @apply px-6 py-2 transition-shadow rounded-lg shadow lg:px-12 text-primary hover:shadow-md disabled:bg-grey;
   }
 
   .input {
