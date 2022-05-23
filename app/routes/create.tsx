@@ -5,7 +5,7 @@ import { Form, useActionData } from "@remix-run/react";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { db } from "~/utils/prisma.server";
-import { getUserId } from "~/utils/session.server";
+import { getUserId, getUserNameByOauthId } from "~/utils/session.server";
 
 type ActionData = {
   fieldErrors?: {
@@ -26,8 +26,8 @@ const createFormSchema = Yup.object({
 });
 
 export const meta: MetaFunction = () => ({
-  title: "Create A New Poll"
-})
+  title: "Create A New Poll",
+});
 
 export const action: ActionFunction = async ({ request }) => {
   const authorId = await getUserId(request);
@@ -58,6 +58,18 @@ export const action: ActionFunction = async ({ request }) => {
       },
     });
 
+    if (authorId) {
+      const name = await getUserNameByOauthId(authorId)
+      await db.voter.create({
+        data: {
+          pollId: newPoll.id,
+          name,
+          authorId,
+          credits: newPoll!.initialCredits,
+        },
+      });
+    }
+
     return redirect(`/poll/${newPoll.id}`);
   } catch (err: any) {
     if (err instanceof Yup.ValidationError) {
@@ -68,7 +80,7 @@ export const action: ActionFunction = async ({ request }) => {
       return json({ fieldErrors });
     } else {
       console.log(err);
-      
+
       return json({ error: "Unknown Error." });
     }
   }
