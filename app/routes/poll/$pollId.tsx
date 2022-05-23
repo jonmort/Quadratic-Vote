@@ -51,9 +51,9 @@ export const loader: LoaderFunction = async ({
 
   if (oauthId) {
     myVotePageId = voters.find((voter) => voter.authorId === oauthId)?.id;
-  }
+  }  
 
-  return { poll, voters, options, currentUrl: request.url, myVotePageId };
+  return { poll, voters, options, currentUrl: (new URL(request.url)).origin, myVotePageId };
 };
 
 const PollDetails = () => {
@@ -66,10 +66,10 @@ const PollDetails = () => {
         <PollShare />
       </div>
       <div className="grid grid-cols-12 min-h-[50vh] mt-[5vh]">
-        <div className="lg:col-span-6 col-span-12">
+        <div className="col-span-12 lg:col-span-6">
           <CurrentStatus options={options} />
         </div>
-        <div className="flex flex-col lg:col-span-6 col-span-12 prose prose-p:m-0 prose-h3:m-0 prose-table:m-0">
+        <div className="flex flex-col col-span-12 prose lg:col-span-6 prose-p:m-0 prose-h3:m-0 prose-table:m-0">
           <p>{poll.description}</p>
           <Link
             className="block mt-4 text-center no-underline uppercase btn bg-accent3 lg:order-2"
