@@ -48,6 +48,8 @@ model Voter {
   pollId   String
   author   User?   @relation(fields: [authorId], references: [oauthId])
   authorId String?
+
+  @@unique([authorId, pollId])
 }
 
 model User {
