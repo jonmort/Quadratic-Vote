@@ -42,6 +42,11 @@ export const loader: LoaderFunction = async ({
 
   if (!poll) throw redirect("/join");
 
+  if (poll && userId) { 
+    const userAlreadyInPoll = (await db.voter.count({where: {authorId: userId, pollId: pollId}})) > 0
+    if (userAlreadyInPoll) throw redirect(`/poll/${pollId}`)
+  }
+
   return {
     poll,
     username,
