@@ -12,5 +12,7 @@ export const action: ActionFunction = async ({ request }) => {
   // Get or create user
   const user = await getOrCreateUser(token);
   // create session
-  return createUserSession(user.oauthId, "/");
+  const url = new URL(request.url);
+  const pollId = url.searchParams.get("pollId");
+  return createUserSession(user.oauthId, pollId ? `/poll/${pollId}` : "/");
 };

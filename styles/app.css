@@ -25,7 +25,7 @@
   }
 
   .input {
-    @apply bg-secondary3 px-4 py-2 border-[1px] border-primary2 rounded placeholder:text-primary text-primary m-0;
+    @apply bg-white px-4 py-2 border-[1px] border-primary rounded placeholder:text-grey2 text-secondary m-0;
   }
 
   .form-control {
@@ -53,7 +53,7 @@
     background-image: url("/bg.png"),
       linear-gradient(
         270deg,
-        #0e2446 0,
+        #ECF1FF 0,
         rgba(14, 36, 70, 0) 70.55%,
         rgba(14, 36, 70, 0) 70.55%,
         rgba(14, 36, 70, 0) 70.55%,

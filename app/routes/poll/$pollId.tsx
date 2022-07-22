@@ -58,25 +58,27 @@ export const loader: LoaderFunction = async ({
 
 const PollDetails = () => {
   const { poll, options, myVotePageId } = useLoaderData<PollLoaderData>();
-
+  const show = true;
   return (
     <div className="container p-4 mx-auto">
       <div className="prose">
         <h1 className="my-8 text-center text-secondary">{poll.title}</h1>
-        <PollShare />
       </div>
       <div className="grid grid-cols-12 min-h-[50vh] mt-[5vh]">
         <div className="col-span-12 lg:col-span-6">
-          <CurrentStatus options={options} />
+          {show ? <CurrentStatus options={options} /> : <div></div>}
         </div>
         <div className="flex flex-col col-span-12 prose lg:col-span-6 prose-p:m-0 prose-h3:m-0 prose-table:m-0">
+          <div>
           <p>{poll.description}</p>
+          <br/>
           <Link
-            className="block mt-4 text-center no-underline uppercase btn bg-accent3 lg:order-2"
+            className="my-8 mt-4 text-center no-underline uppercase btn bg-accent3 lg:order-2"
             to={`/vote/${myVotePageId}`}
           >
-            My Vote Page For {poll.title}
+            Click here to Vote For {poll.title}
           </Link>
+          </div>
           <Voters />
         </div>
       </div>

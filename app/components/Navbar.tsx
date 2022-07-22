@@ -5,18 +5,19 @@ import type { RootLoaderData } from "~/root";
 const Navbar = () => {
   const data = useLoaderData<RootLoaderData>();
   const location = useLocation();
+  
 
   return (
     <div
-      className={`p-4 relative z-10 ${
+      className={`p-4 text-white relative z-10 bg-primary ${
         location.pathname !== "/" ? "bg-primary" : ""
       }`}
     >
       <div className="container flex flex-wrap items-center justify-center mx-auto lg:justify-start">
         <div className="flex-grow">
           <Link to="/" className="flex py-2 text-3xl space-x-2">
-            <img src="/qv_logo.png" alt="Quadratic Vote" className="h-10" />
-            <span className="relative hidden text-secondary3 md:inline">Quadratic Vote</span>
+            <img src="/adaptavist_glyph_orange.png" alt="HackDay Vote" className="h-10" />
+            <span className="relative hidden text-secondary2 md:inline">HackDay Vote</span>
           </Link>
         </div>
         <div className="flex items-center flex-grow-0 md:space-x-4 space-x-2 md:mt-0">
@@ -36,7 +37,7 @@ const Navbar = () => {
             data-client_id={data.clientId}
             data-context="signin"
             data-ux_mode="popup"
-            data-login_uri={data.redirectUri}
+            data-login_uri={data.redirectUri + (data.pollId ? `?pollId=${data.pollId}` : "")}
             data-auto_prompt="false"
           ></div>
           {data.isLoggedIn && (
@@ -45,7 +46,7 @@ const Navbar = () => {
             </Link>
           )}
           {location.pathname === "/" ? (
-            <Link to="/create" className="btn bg-accent3 whitespace-nowrap">
+            <Link to="/create" className="btn bg-grey2 whitespace-nowrap">
               Create New Poll
             </Link>
           ) : null}

@@ -23,6 +23,8 @@ const createFormSchema = Yup.object({
     .integer("Initial Credits should be an integer")
     .label("Initial Credits"),
   questions: Yup.array().of(Yup.string().required()).min(2).label("Questions"),
+  descriptions: Yup.array().of(Yup.string().required()).min(2).label("Option Description"),
+  urls: Yup.array().of(Yup.string().required()).min(2).label("URLs"),
 });
 
 export const meta: MetaFunction = () => ({
@@ -38,12 +40,15 @@ export const action: ActionFunction = async ({ request }) => {
     description: formData.get("description"),
     initialCredits: formData.get("initialCredits"),
     questions: formData.getAll("questions"),
+    descriptions: formData.getAll("descriptions"),
+    urls: formData.getAll("urls"),
   };
 
   try {
     const validatedValues = await createFormSchema.validate(formValues, {
       abortEarly: false,
     });
+    
     const newPoll = await db.poll.create({
       data: {
         title: validatedValues.title,
@@ -51,8 +56,10 @@ export const action: ActionFunction = async ({ request }) => {
         description: validatedValues.description || null,
         authorId,
         options: {
-          create: validatedValues.questions?.map((question) => ({
+          create: validatedValues.questions?.map((question, index) => ({
             text: question,
+            description:  validatedValues.descriptions?.at(index),
+            url: validatedValues.urls?.at(index)
           })),
         },
       },
@@ -82,6 +89,9 @@ export const action: ActionFunction = async ({ request }) => {
       console.log(err);
 
       return json({ error: "Unknown Error." });
+      // return json({ error: JSON.stringify(err),
+      //   t: JSON.stringify(typeof err)
+      //  });
     }
   }
 };
@@ -158,6 +168,14 @@ const CreatePoll = () => {
             >
               {actionData?.fieldErrors?.questions}
             </p>
+            <label className="label" htmlFor="descriptions">
+              Description:
+            </label>
+            <input className="input" name="descriptions" />
+            <label className="label" htmlFor="url">
+              URL:
+            </label>
+            <input className="input" name="urls" />
           </div>
         ))}
         <div className="flex space-x-2">

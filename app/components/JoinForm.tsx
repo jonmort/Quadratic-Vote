@@ -8,6 +8,7 @@ const JoinForm = () => {
 
   return (
     <Form className="flex flex-col space-y-4" action="/join" method="post">
+      
       <div className="form-control">
         {!username && (
           <label className="label" htmlFor="name">

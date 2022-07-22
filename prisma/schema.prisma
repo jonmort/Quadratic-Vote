@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,39 +12,41 @@ model Poll {
   title          String
   description    String?
   createdAt      DateTime @default(now())
-  options        Option[]
   initialCredits Int
-  voters         Voter[]
-  author         User?    @relation(fields: [authorId], references: [oauthId])
   authorId       String?
+  author         User?    @relation(fields: [authorId], references: [oauthId])
+  options        Option[]
+  voters         Voter[]
 }
 
 model Option {
-  id        Int      @id @default(autoincrement())
-  text      String
-  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  pollId    String
-  vote      Vote[]
+  id          Int      @id @default(autoincrement())
+  text        String
+  description String?
+  createdAt   DateTime @default(now())
+  pollId      String
+  url         String?
+  poll        Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  vote        Vote[]
 }
 
 model Vote {
   id       Int     @id @default(autoincrement())
-  option   Option  @relation(fields: [optionId], references: [id])
   optionId Int
-  voter    Voter?  @relation(fields: [voterId], references: [id], onDelete: Cascade)
   voterId  String?
+  option   Option  @relation(fields: [optionId], references: [id])
+  voter    Voter?  @relation(fields: [voterId], references: [id], onDelete: Cascade)
 }
 
 model Voter {
   id       String  @id @default(cuid())
   name     String
-  votes    Vote[]
-  poll     Poll    @relation(fields: [pollId], references: [id], onDelete: Cascade)
   credits  Int
   pollId   String
-  author   User?   @relation(fields: [authorId], references: [oauthId])
   authorId String?
+  author   User?   @relation(fields: [authorId], references: [oauthId])
+  poll     Poll    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes    Vote[]
 
   @@unique([authorId, pollId])
 }
@@ -56,8 +55,8 @@ model User {
   id      Int     @id @default(autoincrement())
   name    String
   oauthId String  @unique
-  voters  Voter[]
   polls   Poll[]
+  voters  Voter[]
 
   @@index([oauthId])
 }

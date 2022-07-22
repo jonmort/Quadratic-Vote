@@ -10,6 +10,7 @@ import React from "react";
 import JoinForm from "~/components/JoinForm";
 import { db } from "~/utils/prisma.server";
 import { getUserId, getUserNameByOauthId } from "~/utils/session.server";
+import type { RootLoaderData } from "~/root";
 
 export type JoinLoaderData = {
   poll: Poll | null;
@@ -42,8 +43,8 @@ export const loader: LoaderFunction = async ({
 
   if (!poll) throw redirect("/join");
 
-  if (poll && userId) { 
-    const userAlreadyInPoll = (await db.voter.count({where: {authorId: userId, pollId: pollId}})) > 0
+  if (poll && userId) {
+    const userAlreadyInPoll = (await db.voter.count({ where: { authorId: userId, pollId: pollId } })) > 0
     if (userAlreadyInPoll) throw redirect(`/poll/${pollId}`)
   }
 
@@ -83,30 +84,47 @@ export const action: ActionFunction = async ({ request }) => {
 
 const Join = () => {
   const { poll, username } = useLoaderData<JoinLoaderData>();
+  const data = useLoaderData<RootLoaderData>();
 
-  return (
-    <div className="container max-w-3xl p-4 mx-auto">
-      <div className="w-full prose">
-        <div className="my-6 text-center">
-          {username && (
+  if (!username) {
+    return (
+      <div className="container max-w-3xl p-4 mx-auto" >
+        <div className="w-full prose">
+          <div className="my-6 text-center">
             <h1>
-              Hi <span className="text-primary3">{username}</span>
+              Please login using Google SSO ⤴️
             </h1>
-          )}
-          <h1>
-            {poll ? (
-              <span>
-                Joining Poll <span className="text-primary3">{poll.title}</span>
-              </span>
-            ) : (
-              <span>Please fill in the form.</span>
-            )}
-          </h1>
+          </div>
         </div>
-        <JoinForm />
+      </div >
+    )
+  } else {
+
+    return (
+      <div className="container max-w-3xl p-4 mx-auto">
+        <div className="w-full prose">
+          <div className="my-6 text-center">
+            {username && (
+              <h1>
+                Hi <span className="text-primary3">{username}</span>
+              </h1>
+            )}
+            <h1>
+              {poll ? (
+                <span>
+                  Joining Poll <span className="text-primary3">{poll.title}</span>
+                </span>
+              ) : (
+                <span>Please fill in the form.</span>
+              )}
+            </h1>
+
+          </div>
+          <JoinForm />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export function CatchBoundary() {

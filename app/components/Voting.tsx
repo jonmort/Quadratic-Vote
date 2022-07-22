@@ -23,10 +23,14 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
             0
           );
           const optionId = option.id;
-
+//<p>{option.description}</p>
           return (
             <li className="flex flex-col my-8" key={option.id}>
-              <h4 className="text-2xl">{option.text}</h4>
+              <a href={option.url||""} target={ "_blank"}><h4 className="text-2xl">{option.text}</h4></a>
+              
+              {option.url ? <p className="prose"><a href={option.url} target={ "_blank"}>Presentation</a></p>:""}
+              
+
               <div className="flex items-center justify-between mt-4 space-x-4">
                 <fetcher.Form action="/vote/decrement" method="post">
                   <input hidden name="optionId" value={optionId} readOnly />
@@ -58,6 +62,9 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId }) => {
                   </button>
                 </fetcher.Form>
               </div>
+              <p className="prose text-center">
+                  Next vote costs {(myVotes + 1) * (myVotes + 1)} credits
+                </p>
             </li>
           );
         })}

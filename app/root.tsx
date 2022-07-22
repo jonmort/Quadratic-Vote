@@ -17,18 +17,21 @@ export function links() {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Quadratic Voting",
+  title: "HackDay Voting",
   viewport: "width=device-width,initial-scale=1",
 });
 
 export type RootLoaderData = {
   clientId: string;
   redirectUri: string;
-  isLoggedIn: boolean
+  isLoggedIn: boolean;
+  pollId?: string
 };
 
 export const loader: LoaderFunction = async ({request}): Promise<RootLoaderData> => {
   const userId = await getUserId(request)  
+  const url = new URL(request.url);
+  const pollId = url.searchParams.get("pollId") || undefined;
 
   if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REDIRECT_URI) {
     throw new Response("Please set Google credentials", { status: 400 });
@@ -37,7 +40,8 @@ export const loader: LoaderFunction = async ({request}): Promise<RootLoaderData>
   return {
     clientId: process.env.GOOGLE_CLIENT_ID,
     redirectUri: process.env.GOOGLE_REDIRECT_URI,
-    isLoggedIn: !!userId
+    isLoggedIn: !!userId,
+    pollId
   };
 };
 

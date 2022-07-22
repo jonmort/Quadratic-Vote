@@ -33,8 +33,10 @@ export const loader: LoaderFunction = async ({ params }) => {
   }
 
   const options = await db.option.findMany({
-    where: { pollId: voter.pollId },
-    include: { vote: true },
+    where: { pollId: voter.pollId,  },
+    include: { vote: {
+      where: {voterId: voter.id}
+    } },
   });
 
   return { voter, options };
@@ -63,15 +65,56 @@ const VotingPage = () => {
           </Link>
         </h2>
         <p>{poll.description}</p>
+        <div className="mt-8 grid grid-cols-3 gap-8">
+          <div className="p-4 rounded bg-grey col-span-3 lg:col-span-1 text-left">
+            <p>This voting system uses Quadratic Voting to vote
+              for HackDay projects. Each vote for a project costs progressively more as shown in the table on the right. To find out more about
+              Quadratic Voting see <a href="https://en.wikipedia.org/wiki/Quadratic_voting" target={"_blank"}>Wikipedia</a>.</p>
+          </div>
+          <div className="relative p-4 rounded bg-grey lg:col-span-2 col-span-3">
+            <table className="table-fixed" style={{ width: "30%" }}>
+              <thead>
+                <tr>
+                  <td>Number of votes</td>
+                  <td>"Vote Credit" cost</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>9</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>16</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>25</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+        </div>
       </div>
       <h3 className="text-3xl text-center lg:text-left">
         Remaining Credits: <span className="text-secondary">{credits}</span>
       </h3>
       <div className="mt-8 grid grid-cols-3 gap-8">
-        <div className="p-8 rounded bg-secondary3 col-span-3 lg:col-span-1">
+        <div className="p-8 rounded bg-grey col-span-3 lg:col-span-1">
           <Voting options={options} votes={votes} voterId={id} />
         </div>
-        <div className="relative p-8 rounded bg-secondary3 lg:col-span-2 col-span-3">
+        <div className="relative p-8 rounded bg-grey lg:col-span-2 col-span-3">
           <CurrentStatus options={options} closed />
           <div className="absolute text-right bottom-4 right-4">
             <h3 className="text-xl font-bold">{poll.title}</h3>
